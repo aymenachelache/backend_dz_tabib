@@ -24,7 +24,8 @@ def create_user(user:UserRegister):
 
     try:
         # Insert the user into the database
-        insert_user(user.username, hashed_password,user.email)
+        user.password = hashed_password
+        insert_user(user)
         return {"msg": "User registered successfully"}
     except Exception as e:
         raise HTTPException(
@@ -40,7 +41,6 @@ async def authenticate_user(email: str, password: str):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password"
         )
-    
 
     # Verify the password
     if not verify_password(password, user.password):
@@ -84,6 +84,7 @@ async def get_current_active_user(
 
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm) -> UserLoginResponse:
 
+    
     user = await authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -112,7 +113,7 @@ async def forgot_password(email: str):
         token,expiry = generate_reset_token_and_expiry()
 
         # Generate reset token and store in DB
-        token, expiry = set_reset_token_in_db(user.id,token,expiry)
+        set_reset_token_in_db(user.id,token,expiry)
 
         # Construct the reset link
         reset_link = f"https://frontend.example.com/reset-password?token={token}"
