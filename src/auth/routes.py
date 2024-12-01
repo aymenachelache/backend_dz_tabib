@@ -1,7 +1,7 @@
 # auth/routes.py
 from fastapi import APIRouter,status,Depends,BackgroundTasks
 from typing import Annotated
-from src.auth.schemas import Forgetpassword, User, UserLoginRequest, UserLoginResponse,UserResponse,UserRegister,EmailModel,Ressetpassword
+from src.auth.schemas import Forgetpassword, User, UserLoginRequest, UserLoginResponse,UserResponse,UserRegister,EmailModel,Ressetpassword, email
 from src.auth.services import authenticate_user, create_user,login_for_access_token,get_current_active_user,forgot_password,reset_password
 from fastapi.security import OAuth2PasswordRequestForm
 from src.auth.mail import send_email
@@ -28,7 +28,7 @@ async def read_users_me(
     return current_user
 
 @router.post("/forgot_password")
-async def forgot_password_handler(email: str):
+async def forgot_password_handler(email: email):
     return await forgot_password(email)
 
 @router.post("/reset_password")

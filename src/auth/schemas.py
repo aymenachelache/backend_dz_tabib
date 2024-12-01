@@ -95,4 +95,7 @@ class Forgetpassword(BaseModel):
 
 
 
+
+class email(BaseModel):
+    email: EmailStr
     

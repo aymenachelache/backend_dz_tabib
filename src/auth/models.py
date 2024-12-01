@@ -175,6 +175,7 @@ def get_user_by_reset_token(token: str):
 
 def update_password(hashed_password: str, user_id: str):
     update_password_query = "UPDATE users SET password = %s WHERE id = %s"
+    print(user_id,hashed_password)
     delete_token_query = "DELETE FROM password_resets WHERE user_id = %s"
     params = (hashed_password, user_id)
     execute_query(update_password_query, params)

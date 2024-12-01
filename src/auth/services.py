@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from typing import Annotated
 from src.auth.utils import  generate_reset_token_and_expiry, hash_password,verify_password,create_access_token,verify_access_token, verify_reset_token
 from src.auth.models import get_user_by_email, get_user_by_email_or_username, insert_user, set_reset_token_in_db, update_password
-from src.auth.schemas import Forgetpassword, User,UserResponse,TokenData,UserLoginResponse,UserRegister,SearchUser
+from src.auth.schemas import Forgetpassword, User,UserResponse,TokenData,UserLoginResponse,UserRegister,SearchUser, email
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
 from src.auth.mail import send_email
@@ -102,21 +102,20 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm) -> UserLo
 from fastapi.responses import JSONResponse
 
 
-async def forgot_password(email: str):
+async def forgot_password(email: email):
     try:
         # Check if the user exists
-        user = get_user_by_email(email)
+        user = get_user_by_email(email.email)
         if user is None:
-            return JSONResponse(
-                status_code=404, content={"message": "User not found"}
-            )
+            return JSONResponse(status_code=200, content={"message": "Reset email sent"})
+
         token,expiry = generate_reset_token_and_expiry()
 
         # Generate reset token and store in DB
         set_reset_token_in_db(user.id,token,expiry)
 
         # Construct the reset link
-        reset_link = f"https://frontend.example.com/reset-password?token={token}"
+        reset_link = f"http://localhost:5173/reset-password?token={token}"
 
         # Email content
         subject = "Password Reset Request"
