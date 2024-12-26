@@ -62,10 +62,9 @@ def verify_reset_token(token: str):
         if user is None:
             raise HTTPException(status_code=400, detail="Invalid or expired token")
 
-        user_id, token_expiry = user
-        if datetime.now() > token_expiry:
+        if datetime.now() > user["expiry"]:
             raise HTTPException(status_code=400, detail="Token has expired")
-        return user_id
+        return user["user_id"]
     except Exception as e:
         raise e
 

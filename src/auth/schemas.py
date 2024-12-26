@@ -1,14 +1,14 @@
 # auth/schemas.py
 from fastapi import Query
 from pydantic import BaseModel,EmailStr,Field, ValidationError
-from typing import Annotated,List
+from typing import Annotated,List,Optional
 import datetime
 
 class UserRegister(BaseModel):
     username: str = Field(..., min_length=3, max_length=20)
-    firstName: str = Field(..., min_length=1, max_length=50)
-    lastName: str = Field(..., min_length=1, max_length=50)
-    phoneNumber: str = Field(..., description="Enter a valid phone number.")
+    first_name: str = Field(..., min_length=1, max_length=50)
+    last_name: str = Field(..., min_length=1, max_length=50)
+    phone_number: str = Field(..., description="Enter a valid phone number.")
     email: EmailStr = Field(...)
     password: str = Field(..., min_length=8)
     is_doctor: bool = Field(False)
@@ -27,17 +27,29 @@ class User(UserRegister):
 
 
 
-class test(BaseModel):
+class DoctorResponse(BaseModel):
     id: int
-    username: str
-    firstName: str
-    lastName: str
-    phoneNumber: str
-    email: str
-    password: str
-    disabled: bool
-    created_at: datetime.datetime
+    username: str = Field(...)
+    first_name: str = Field(...)
+    last_name: str = Field(...)
+    email: EmailStr = Field(...)
+    phone_number: str = Field(...)
     is_doctor: bool
+    created_at: datetime.datetime
+    disabled: bool = False
+
+    years_of_experience: Optional[int]=None
+    state: Optional[str]=None
+    city: Optional[str]=None
+    street: Optional[str]=None
+    spoken_languages: Optional[str]=None
+    zoom_link: Optional[str]=None
+    daily_visit_limit: Optional[int]=None
+    photo: Optional[str] = None
+    phone_number: Optional[str]=None
+    specialization : Optional[str]=None
+    latitude: Optional[float] =None
+    longitude: Optional[float]=None
 
 
 
@@ -57,10 +69,11 @@ class SearchUser(BaseModel):
 class UserResponse(BaseModel):
     id: int
     username: str = Field(...)
-    firstName: str = Field(...)
-    lastName: str = Field(...)
+    first_name: str = Field(...)
+    last_name: str = Field(...)
     email: EmailStr = Field(...)
-    phoneNumber: str = Field(...)
+    phone_number: str = Field(...)
+    is_doctor: bool
     created_at: datetime.datetime
     disabled: bool = False
     class Config:

@@ -2,16 +2,19 @@
 from src.database.db_setup import initialize_database
 from fastapi import FastAPI
 from src.auth.routes import router as auth_router
+from src.doctors.routes import router as doctor_router
+from src.working_days.routes import router as working_days_router
 from src.auth.backgroundTasks import delete_expired_tokens
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+
 
 
 
 app = FastAPI()
-
-
-app = FastAPI()
+app.mount("/uploads", StaticFiles(directory="uploads/photos"), name="uploads")
 
 # Allow requests from your frontend URL
 app.add_middleware(
@@ -24,6 +27,8 @@ app.add_middleware(
 
 # Include the authentication router
 app.include_router(auth_router)
+app.include_router(doctor_router)
+app.include_router(working_days_router)
 
 @app.on_event("startup")
 async def on_startup():
