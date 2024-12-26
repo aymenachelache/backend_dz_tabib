@@ -94,9 +94,10 @@ def initialize_database():
             zoom_link VARCHAR(255),
             daily_visit_limit INT,
             photo VARCHAR(255),
-            specialization VARCHAR(255),
+            specialization_id int,
             latitude DoUBLE,
-            longitude DoUBLE
+            longitude DoUBLE,
+            FOREIGN KEY (specialization_id) REFERENCES specializations(id) ON DELETE CASCADE
         );
         """
         create_users_table = """
@@ -154,6 +155,12 @@ def initialize_database():
             FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE
         );
         """
+        create_specializations_table = """
+        CREATE TABLE IF NOT EXISTS specializations (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL
+        );
+        """
 
         # Execute queries
         try:
@@ -163,6 +170,7 @@ def initialize_database():
             cursor.execute(create_working_days_table)
             cursor.execute(create_working_hours_table)
             cursor.execute(create_appointments_table)
+            cursor.execute(create_specializations_table)
             print("Tables created successfully.")
         except Exception as e:
             print("Error creating tables:", e)
