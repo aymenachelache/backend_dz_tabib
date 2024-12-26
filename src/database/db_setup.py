@@ -164,13 +164,13 @@ def initialize_database():
 
         # Execute queries
         try:
+            cursor.execute(create_specializations_table)
             cursor.execute(create_doctors_table)
             cursor.execute(create_users_table)
             cursor.execute(create_reset_token_table)
             cursor.execute(create_working_days_table)
             cursor.execute(create_working_hours_table)
             cursor.execute(create_appointments_table)
-            cursor.execute(create_specializations_table)
             print("Tables created successfully.")
         except Exception as e:
             print("Error creating tables:", e)
