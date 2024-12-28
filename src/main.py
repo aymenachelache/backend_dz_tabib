@@ -37,6 +37,7 @@ async def on_startup():
     asyncio.create_task(delete_expired_tokens())
     print("Application is starting up...")
 
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to DZ-Tabib!"}
@@ -46,4 +47,13 @@ async def root():
 async def shutdown_event():
     print("Application is shutting down.")
 
+
 # Additional routers can be included here if you have other modules
+
+from fastapi import FastAPI
+from src.homepage.routes import router as homepage_router
+
+app = FastAPI()
+
+
+app.include_router(homepage_router)
