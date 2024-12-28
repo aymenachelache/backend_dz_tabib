@@ -8,6 +8,12 @@ from src.auth.backgroundTasks import delete_expired_tokens
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+# Additional routers can be included here if you have other modules
+
+from fastapi import FastAPI
+from src.homepage.routes import router as homepage_router
+
+
 
 
 
@@ -29,6 +35,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(doctor_router)
 app.include_router(working_days_router)
+app.include_router(homepage_router)
 
 @app.on_event("startup")
 async def on_startup():
@@ -48,12 +55,4 @@ async def shutdown_event():
     print("Application is shutting down.")
 
 
-# Additional routers can be included here if you have other modules
 
-from fastapi import FastAPI
-from src.homepage.routes import router as homepage_router
-
-app = FastAPI()
-
-
-app.include_router(homepage_router)

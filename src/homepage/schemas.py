@@ -1,19 +1,25 @@
-from pydantic import BaseModel
-from typing import List, Optional
+# src/homepage/schemas.py
 
-class Doctor(BaseModel):
+from typing import List, Dict
+from pydantic import BaseModel
+
+class SpecialiteResponse(BaseModel):
+    specialities: Dict[int, str]
+
+class DoctorHomepage(BaseModel):
     firstname: str
     familyname: str
-    specialty: str
-    ville: str
-    wilaya: str
-    rue: str
-    photo_url: Optional[str]
-    rating: Optional[float] = 0.0
+    specialite: str
+    state: str
+    city: str
+    street: str
+    photo: str
+    rating: float
 
 class DoctorResponse(BaseModel):
-    doctors: List[Doctor]
+    doctors: List[DoctorHomepage]
 
 class CategoryFilterResponse(BaseModel):
-    doctors: List[Doctor]
+    doctors: List[DoctorHomepage]
+
 

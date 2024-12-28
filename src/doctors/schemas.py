@@ -40,7 +40,6 @@ class DoctorInformation(BaseModel):
     is_doctor: bool
     created_at: datetime.datetime
     disabled: bool = False
-
     years_of_experience: Optional[int]
     state: Optional[str]
     city: Optional[str]
@@ -54,6 +53,7 @@ class DoctorInformation(BaseModel):
     specialization_id: Optional[int] = None
     latitude: Optional[float] 
     longitude: Optional[float]
+    rating: Optional[float] = 0.0
 
 class DoctorProfileUpdate(BaseModel):
     username: Optional[str] = None
