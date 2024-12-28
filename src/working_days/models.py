@@ -181,13 +181,13 @@ def verify_working_day(doctor_id: int, day_of_week) -> WorkingDayResponse:
     return existing_working_day
 
 
-def get_working_day(day_id: int) -> WorkingDayResponse:
+def get_working_day(doctor_id,day_id: int) -> WorkingDayResponse:
     # Check if the working day already exists
     query = """
     SELECT wd.day_id, wd.day_of_week, wd.daily_appointment_limit
     FROM working_days wd
-    WHERE wd.day_id = %s
+    WHERE wd.day_id = %s and wd.doctor_id = %s
     """
-    params = (day_id,)
+    params = (day_id,doctor_id)
     existing_working_day = execute_query(query, params, fetch_one=True)
     return existing_working_day

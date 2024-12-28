@@ -64,7 +64,7 @@ router = APIRouter()
 
 
 @router.post("/working-days", response_model=List[WorkingDayResponse])
-def create_working_day(data: List[WorkingDayCreate],doctor=Depends(get_current_user)):
+def create_working_days(data: List[WorkingDayCreate],doctor=Depends(get_current_user)):
     response=[]
     try:
         for day in data:
@@ -91,9 +91,8 @@ def get_working_days(doctor_id: int,user=Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/working-days/{working_day_id}", response_model=WorkingDayResponse)
-def update_working_day(working_day_id: int,working_hour_id: int, data: WorkingDayUpdate,user=Depends(get_current_user)):
-    print("hhhhhhhhhhhhhhhhhhhhh")
-    result=modify_working_day(working_day_id,working_hour_id ,data.daily_appointment_limit,data.hours)
+def update_working_day(working_day_id: int,working_hour_id: int, data: WorkingDayUpdate,doctor=Depends(get_current_user)):
+    result=modify_working_day(doctor.id,working_day_id,working_hour_id ,data.daily_appointment_limit,data.hours)
     return result
 
 

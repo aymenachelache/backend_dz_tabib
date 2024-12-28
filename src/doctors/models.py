@@ -58,6 +58,16 @@ def get_all_doctor_information(user_id: int):
     params = (user_id,)
     return execute_query(query, params, fetch_one=True)
 
+def get_doctors(page: int, limit: int):
+    offset = (page - 1) * limit
+    query = """
+        SELECT d.*, s.name AS specialization_name 
+        FROM doctors d
+        LEFT JOIN specializations s ON d.specialization_id = s.id
+        LIMIT %s OFFSET %s
+    """
+    return execute_query(query,params=(limit, offset), fetch_all=True)
+
 
 def create_specialization(name: str):
     query = "INSERT INTO specializations (name) VALUES (%s)"
