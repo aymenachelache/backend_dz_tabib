@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, File, Query, UploadFile,Form
 from src.doctors.models import get_specializations_from_db
-from src.doctors.schemas import DoctorCreate, DoctorInformation, DoctorProfileUpdate, Doctors, UserFields
+from src.doctors.schemas import DoctorCreate, DoctorInformation, DoctorProfileUpdate, UserFields
 from src.doctors.services import add_profile_photo, fetch_doctors, get_current_doctor, get_doctor_by_id, update_doctor_profile
 from src.auth.services import get_current_user
 from typing import Annotated, List
