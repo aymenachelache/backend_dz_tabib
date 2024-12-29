@@ -46,7 +46,7 @@ def add_working_day_and_hours(doctor_id, day_of_week, daily_appointment_limit, h
         working_day_id = create_working_day(doctor_id, day_of_week, daily_appointment_limit)
         for hour in hours:
             create_working_hour(working_day_id, hour.start_time, hour.end_time)
-        day=get_working_day(working_day_id)
+        day=get_working_day(doctor_id,working_day_id)
         hours=get_working_hours(working_day_id)
         formatted_hours = []
         for hour in hours:
@@ -81,15 +81,15 @@ def fetch_working_days(doctor_id):
 
 
 # Service to update a working day
-def modify_working_day(working_day_id, working_hour_id,daily_appointment_limit,hours):
-    result=get_working_day(working_day_id)
+def modify_working_day(doctor_id,working_day_id, working_hour_id,daily_appointment_limit,hours):
+    result=get_working_day(doctor_id,working_day_id)
     if result : 
         update_working_day(working_day_id, daily_appointment_limit)
         for hour in hours if hours else []:
             update_working_hour(working_hour_id,working_day_id, hour.start_time,hour.end_time)
     else:
         raise HTTPException(status_code=404, detail="No Working day with this id")
-    day=get_working_day(working_day_id)
+    day=get_working_day(doctor_id,working_day_id)
     hours=get_working_hours(working_day_id)
     formatted_hours = []
     for hour in hours:

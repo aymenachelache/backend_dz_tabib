@@ -4,6 +4,7 @@ from src.auth.schemas import User
 from src.auth.services import get_current_user
 from src.doctors.models import (
     get_all_doctor_information,
+    get_doctors,
     update_doctor,
 )
 from src.doctors.schemas import DoctorInformation, DoctorProfileUpdate
@@ -108,3 +109,12 @@ def get_doctor_by_id(id: int):
             status_code=status.HTTP_404_NOT_FOUND, detail="no doctor with this id"
         )
     return doctor
+
+def fetch_doctors(page: int, limit: int):
+    doctors = get_doctors(page, limit)
+
+    if doctors is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="no doctors found"
+        )
+    return doctors

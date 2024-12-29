@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile,Form
+from fastapi import APIRouter, Depends, HTTPException, File, Query, UploadFile,Form
 from src.doctors.models import get_specializations_from_db
-from src.doctors.schemas import DoctorCreate, DoctorInformation, DoctorProfileUpdate, UserFields
-from src.doctors.services import add_profile_photo, get_current_doctor, get_doctor_by_id, update_doctor_profile
+from src.doctors.schemas import DoctorCreate, DoctorInformation, DoctorProfileUpdate, Doctors, UserFields
+from src.doctors.services import add_profile_photo, fetch_doctors, get_current_doctor, get_doctor_by_id, update_doctor_profile
 from src.auth.services import get_current_user
-from typing import Annotated
+from typing import Annotated, List
 from typing import Optional
 
 router = APIRouter()
@@ -50,6 +50,14 @@ def get_doctor_information(doctor_id: int):
 
 
 
+@router.get("/doctors", response_model=List[DoctorInformation])
+def get_doctors(page: int = Query(1, ge=1), limit: int = Query(10, ge=1, le=100)):
+    """API route to fetch doctors for the homepage."""
+    doctors = fetch_doctors(page, limit)
+    return doctors
+
+
+
 
 @router.post("/profile/updload", response_model=DoctorInformation)
 def add_photo(photo: UploadFile = File(...), user=Depends(get_current_user)):
@@ -63,5 +71,6 @@ def add_photo(photo: UploadFile = File(...), user=Depends(get_current_user)):
 def get_specializations():
 
     return get_specializations_from_db()
+
 
 
