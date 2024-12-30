@@ -50,7 +50,7 @@ def search_doctors(
         FROM doctors d
         LEFT JOIN specializations s ON d.specialization_id = s.id
         LEFT JOIN Doctor_Assurance da ON d.id = da.Doctor_ID
-        LEFT JOIN Assurance a ON da.Assurance_ID = a.ID_Assurance
+        LEFT JOIN Assurance a ON da.Assurance_ID = a.id
         LEFT JOIN working_days wd ON d.id = wd.doctor_id
         WHERE 1=1
     """

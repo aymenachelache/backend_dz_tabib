@@ -1,6 +1,6 @@
 # src/homepage/schemas.py
 
-from typing import List, Dict
+from typing import List, Dict, Optional
 from pydantic import BaseModel
 
 class SpecialiteResponse(BaseModel):
@@ -9,12 +9,12 @@ class SpecialiteResponse(BaseModel):
 class DoctorHomepage(BaseModel):
     firstname: str
     familyname: str
-    specialite: str
-    state: str
-    city: str
-    street: str
-    photo: str
-    rating: float
+    specialite: Optional[str]=None
+    state: Optional[str]=None
+    city: Optional[str]=None
+    street: Optional[str]=None
+    photo: Optional[str]=None
+    rating: Optional[float]=None
 
 class DoctorResponse(BaseModel):
     doctors: List[DoctorHomepage]

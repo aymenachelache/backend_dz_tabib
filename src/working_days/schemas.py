@@ -23,7 +23,7 @@ class WorkingDayCreate(BaseModel):
     # doctor_id: int
     day_of_week: str = Field(..., pattern=r"^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$")
     daily_appointment_limit: int = Field(..., gt=0)
-    hours: List[WorkingHour]
+    hours: List[CreateHour]
 
 # Schema for updating a working day
 class WorkingDayUpdate(BaseModel):

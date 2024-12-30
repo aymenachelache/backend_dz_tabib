@@ -68,12 +68,22 @@ def get_all_doctor_information(user_id: int):
 def get_doctors(page: int, limit: int):
     offset = (page - 1) * limit
     query = """
-        SELECT d.*, s.name AS specialization_name 
+        SELECT d.*, s.name AS specialization_name,
+        GROUP_CONCAT(a.name) AS assurances
         FROM doctors d
         LEFT JOIN specializations s ON d.specialization_id = s.id
+        LEFT JOIN 
+            doctor_assurance da ON d.id = da.doctor_id
+        LEFT JOIN 
+            assurance a ON da.assurance_id = a.id
         LIMIT %s OFFSET %s
     """
-    return execute_query(query,params=(limit, offset), fetch_all=True)
+    doctors=execute_query(query,params=(limit, offset), fetch_all=True)
+    if doctors:
+        for doctor in doctors:
+            if doctor and doctor.get('assurances'):
+                doctor['assurances'] = doctor['assurances'].split(',')
+    return doctors
 
 
 def create_specialization(name: str):

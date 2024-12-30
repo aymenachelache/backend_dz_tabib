@@ -35,6 +35,7 @@ def fetch_doctors(page: int, db) -> List[DoctorHomepage]:
     with db.cursor(dictionary=True) as cursor:
         cursor.execute(query, (page_size, offset))
         rows = cursor.fetchall()
+        print(rows)
         return [DoctorHomepage(**row) for row in rows]
 
 def fetch_doctors_by_specialty(category: str, page: int, db) -> List[DoctorHomepage]:

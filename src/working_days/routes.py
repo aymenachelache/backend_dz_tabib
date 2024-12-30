@@ -1,6 +1,6 @@
 from datetime import timedelta
 from fastapi import APIRouter, HTTPException, Depends
-from typing import List
+from typing import List, Optional
 from src.auth.services import get_current_user
 from src.doctors.services import get_current_doctor
 from src.working_days.models import get_working_day
@@ -92,7 +92,7 @@ def get_working_days(doctor_id: int,user=Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/working-days/{working_day_id}", response_model=WorkingDayResponse)
-def update_working_day(working_day_id: int,working_hour_id: int, data: WorkingDayUpdate,doctor=Depends(get_current_doctor)):
+def update_working_day(working_day_id: int, data: WorkingDayUpdate,doctor=Depends(get_current_doctor),working_hour_id: Optional[int]=None):
     result=modify_working_day(doctor.id,working_day_id,working_hour_id ,data.daily_appointment_limit,data.hours)
     return result
 
