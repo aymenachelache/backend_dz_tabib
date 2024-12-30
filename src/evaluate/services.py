@@ -3,7 +3,8 @@
 from sqlalchemy.orm import Session
 from src.evaluate.schemas import ReviewResponse, CreateReviewRequest
 from fastapi import HTTPException
-from typing import List,Dict
+from typing import List, Dict
+
 
 def fetch_reviews_by_doctor(id_doctor: int, db: Session) -> List[ReviewResponse]:
     query = """
@@ -17,6 +18,7 @@ def fetch_reviews_by_doctor(id_doctor: int, db: Session) -> List[ReviewResponse]
         rows = cursor.fetchall()
         return [ReviewResponse(**row) for row in rows]
 
+
 def create_review(request: CreateReviewRequest, db: Session):
     cursor = db.cursor()
 
@@ -26,7 +28,7 @@ def create_review(request: CreateReviewRequest, db: Session):
         raise HTTPException(status_code=404, detail="Doctor not found")
 
     # Check if id_patient exists
-    cursor.execute("SELECT COUNT(*) FROM patient WHERE id = %s", (request.id_patient,))
+    cursor.execute("SELECT COUNT(*) FROM users WHERE id = %s", (request.id_patient,))
     if cursor.fetchone()[0] == 0:
         raise HTTPException(status_code=404, detail="Patient not found")
 
@@ -44,10 +46,13 @@ def create_review(request: CreateReviewRequest, db: Session):
     insert_evaluate_query = """
         INSERT INTO evaluate (patient_id, doctor_id, review_id) VALUES (%s, %s, %s)
     """
-    cursor.execute(insert_evaluate_query, (request.id_patient, request.id_doctor, review_id))
+    cursor.execute(
+        insert_evaluate_query, (request.id_patient, request.id_doctor, review_id)
+    )
     db.commit()
 
     cursor.close()
+
 
 def calculate_avg_rating(id_doctor: int, db: Session):
     cursor = db.cursor()
@@ -77,6 +82,3 @@ def calculate_avg_rating(id_doctor: int, db: Session):
     db.commit()
 
     cursor.close()
-
-
-
