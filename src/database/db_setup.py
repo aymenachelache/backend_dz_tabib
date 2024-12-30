@@ -1,6 +1,5 @@
 from .connection import create_db_connection
 
-
 def initialize_database():
     """Initialize the database and create tables if they don't already exist."""
     # Ensure database exists
