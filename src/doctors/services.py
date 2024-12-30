@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status, Depends, File, UploadFile
 import os
 from src.auth.schemas import User
-from src.auth.services import get_current_user
+from src.auth.services import get_current_doctor_login, get_current_user
 from src.doctors.models import (
     get_all_doctor_information,
     get_doctors,
@@ -83,7 +83,7 @@ def update_doctor_profile(id: int, profile_data: DoctorProfileUpdate):
         )
 
 
-async def get_current_doctor(current_user: Annotated[User, Depends(get_current_user)]):
+async def get_current_doctor(current_user: Annotated[User, Depends(get_current_doctor_login)]):
     if not current_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Please login first"

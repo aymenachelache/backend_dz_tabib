@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from src.auth.routes import router as auth_router
 from src.doctors.routes import router as doctor_router
 from src.working_days.routes import router as working_days_router
+from src.appointment.routes import router as appointment_router
 from src.auth.backgroundTasks import delete_expired_tokens
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +30,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(doctor_router)
 app.include_router(working_days_router)
+app.include_router(appointment_router)
 
 @app.on_event("startup")
 async def on_startup():
