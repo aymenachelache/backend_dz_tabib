@@ -1,3 +1,6 @@
+
+
+
 from .connection import create_db_connection
 
 def initialize_database():
@@ -6,6 +9,7 @@ def initialize_database():
     connection = create_db_connection(create_db_if_missing=True)
     if connection:
         cursor = connection.cursor()
+
 
         # SQL queries for table creation
         create_doctors_table = """
@@ -28,9 +32,10 @@ def initialize_database():
             zoom_link VARCHAR(255),
             daily_visit_limit INT,
             photo VARCHAR(255),
-            specialization_id INT,
-            latitude DOUBLE,
-            longitude DOUBLE,
+            specialization_id int,
+            latitude DoUBLE,
+            longitude DoUBLE,
+            rating float DEFAULT 0,
             FOREIGN KEY (specialization_id) REFERENCES specializations(id) ON DELETE CASCADE
         );
         """
@@ -78,16 +83,21 @@ def initialize_database():
         """
         create_appointments_table = """
         CREATE TABLE IF NOT EXISTS appointments (
-            appointment_id INT AUTO_INCREMENT PRIMARY KEY,    -- Unique appointment ID
-            doctor_id INT NOT NULL,                           -- Foreign key to doctors table
-            patient_id INT NOT NULL,                          -- Foreign key to users table
-            appointment_date DATE NOT NULL,                  -- Date of the appointment
-            appointment_time TIME NOT NULL,                  -- Time of the appointment
-            appointment_type ENUM('online', 'présentiel') NOT NULL,  -- Type of appointment
-            status ENUM('pending', 'confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'pending', -- Appointment status
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            doctor_id INT NOT NULL,
+            patient_id INT NOT NULL,
+            working_day_id INT NOT NULL,
+            appointment_date DATE NOT NULL,
+            reason TEXT,
+            type ENUM('online', 'face_to_face') DEFAULT 'face_to_face' NOT NULL,
+            status ENUM('pending', 'cancelled', 'completed') NOT NULL DEFAULT 'pending', -- Appointment status
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
-            FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE
+            FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (working_day_id) REFERENCES working_days(day_id) ON DELETE CASCADE
         );
+
         """
         create_specializations_table = """
         CREATE TABLE IF NOT EXISTS specializations (
@@ -113,8 +123,9 @@ def initialize_database():
         create_review_table = """
         CREATE TABLE IF NOT EXISTS review (
             ID_review INT AUTO_INCREMENT PRIMARY KEY,
-            note INT CHECK (note <= 5) NOT NULL,
-            comment VARCHAR(500)
+            note INT NOT NULL,
+            comment VARCHAR(500),
+            CONSTRAINT chk_note CHECK (note BETWEEN 1 AND 5)
         );
         """
         create_evaluate_table = """

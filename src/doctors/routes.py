@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, File, Query, UploadFile,Form
-from src.doctors.models import get_specializations_from_db
-from src.doctors.schemas import DoctorCreate, DoctorInformation, DoctorProfileUpdate, UserFields
+from src.doctors.models import fetch_assurances, get_specializations_from_db
+from src.doctors.schemas import DoctorCreate, DoctorInformation, DoctorProfileUpdate, Doctors, UserFields
 from src.doctors.services import add_profile_photo, fetch_doctors, get_current_doctor, get_doctor_by_id, update_doctor_profile
 from src.auth.services import get_current_user
 from typing import Annotated, List
@@ -13,23 +13,8 @@ router = APIRouter()
 
 
 
-# @router.post("/profile", response_model=DoctorProfile)
-# def create_profile(profile: DoctorCreate,user=Depends(get_current_user)):
-
-#     """API route for creating a doctor's profile."""
-#     profile_data = profile.dict()
-#     profile_data["user_id"] = user.id
-
-#     if not user.is_doctor:
-#         raise HTTPException(status_code=403, detail="User is not a doctor.")
-    
-#     return create_doctor_profile(user.id,DoctorProfile(**profile_data))
-
-
-
-
 @router.put("/profile", response_model=DoctorInformation)
-def update_profile(profile: DoctorProfileUpdate ,doctor=Depends(get_current_user)):
+def update_profile(profile: DoctorProfileUpdate ,doctor=Depends(get_current_doctor)):
     """API route for updating a doctor's profile."""
     profile_data = profile.dict(exclude_unset=True)
 
@@ -60,7 +45,7 @@ def get_doctors(page: int = Query(1, ge=1), limit: int = Query(10, ge=1, le=100)
 
 
 @router.post("/profile/updload", response_model=DoctorInformation)
-def add_photo(photo: UploadFile = File(...), user=Depends(get_current_user)):
+def add_photo(photo: UploadFile = File(...), user=Depends(get_current_doctor)):
     if not user.is_doctor:
         raise HTTPException(status_code=403, detail="User is not a doctor.")
      
@@ -71,6 +56,11 @@ def add_photo(photo: UploadFile = File(...), user=Depends(get_current_user)):
 def get_specializations():
 
     return get_specializations_from_db()
+
+@router.get("/assurances")
+def get_assurances():
+
+    return fetch_assurances()
 
 
 

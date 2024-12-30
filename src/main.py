@@ -7,6 +7,7 @@ from src.adv_search.routes import router as adv_search_router
 from src.homepage.routes import router as homepage_router
 from src.evaluate.routes import router as evaluate_router
 from src.working_days.routes import router as working_days_router
+from src.appointment.routes import router as appointment_router
 from src.auth.backgroundTasks import delete_expired_tokens
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,7 +43,6 @@ app.include_router(working_days_router)
 app.include_router(homepage_router)
 app.include_router(adv_search_router)
 app.include_router(evaluate_router)
-
 
 @app.on_event("startup")
 async def on_startup():

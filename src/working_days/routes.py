@@ -2,6 +2,7 @@ from datetime import timedelta
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 from src.auth.services import get_current_user
+from src.doctors.services import get_current_doctor
 from src.working_days.models import get_working_day
 from src.working_days.schemas import CreateResponse, WorkingDayCreate, WorkingDayUpdate, WorkingDayResponse,WorkingDay
 from src.working_days.services import (
@@ -64,7 +65,7 @@ router = APIRouter()
 
 
 @router.post("/working-days", response_model=List[WorkingDayResponse])
-def create_working_days(data: List[WorkingDayCreate],doctor=Depends(get_current_user)):
+def create_working_days(data: List[WorkingDayCreate],doctor=Depends(get_current_doctor)):
     response=[]
     try:
         for day in data:
@@ -91,13 +92,13 @@ def get_working_days(doctor_id: int,user=Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/working-days/{working_day_id}", response_model=WorkingDayResponse)
-def update_working_day(working_day_id: int,working_hour_id: int, data: WorkingDayUpdate,doctor=Depends(get_current_user)):
+def update_working_day(working_day_id: int,working_hour_id: int, data: WorkingDayUpdate,doctor=Depends(get_current_doctor)):
     result=modify_working_day(doctor.id,working_day_id,working_hour_id ,data.daily_appointment_limit,data.hours)
     return result
 
 
 @router.delete("/working-days/{working_day_id}")
-def delete_working_day(working_day_id: int,doctor=Depends(get_current_user)):
+def delete_working_day(working_day_id: int,doctor=Depends(get_current_doctor)):
     try:
         remove_working_day(working_day_id)
         return {"message": "Working day deleted successfully"}
