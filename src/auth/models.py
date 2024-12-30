@@ -22,6 +22,14 @@ def get_user_by_email(email: str):
         return None
     return UserFromDB(**user)
 
+def get_user_by_id(id: int):
+    query = "SELECT * FROM users WHERE id = %s"
+    params = (id,)
+    user = execute_query(query, params, fetch_one=True)
+    if user is None:
+        return None
+    return UserFromDB(**user)
+
 def get_doctor_by_email(email: str):
     query = """
         SELECT d.*, s.name AS specialization_name 
@@ -65,9 +73,13 @@ def get_user_by_reset_token(token: str):
     params = (token,)
     return execute_query(query, params, fetch_one=True)
 
-def update_password(hashed_password: str, user_id: str):
+def update_user_password(hashed_password: str, user_id: str):
     update_password_query = "UPDATE users SET password = %s WHERE id = %s"
     delete_token_query = "DELETE FROM password_resets WHERE user_id = %s"
     params = (hashed_password, user_id)
     execute_query(update_password_query, params)
     execute_query(delete_token_query, (user_id,))
+def update_doctor_password(hashed_password: str, user_id: str):
+    update_password_query = "UPDATE doctors SET password = %s WHERE id = %s"
+    params = (hashed_password, user_id)
+    execute_query(update_password_query, params)

@@ -2,7 +2,7 @@ from fastapi import HTTPException, status,Depends
 from fastapi.responses import JSONResponse
 from typing import Annotated
 from src.auth.utils import  generate_reset_token_and_expiry, hash_password,verify_password,create_access_token,verify_access_token, verify_reset_token
-from src.auth.models import get_doctor_by_email, get_user_by_email, get_user_by_email_or_username, insert_doctor, insert_user, set_reset_token_in_db, update_password, update_user
+from src.auth.models import get_doctor_by_email, get_user_by_email, get_user_by_email_or_username, get_user_by_id, insert_doctor, insert_user, set_reset_token_in_db, update_doctor_password, update_user_password
 from src.auth.schemas import DoctorResponse, Forgetpassword, User,UserResponse,TokenData,UserLoginResponse,UserRegister,SearchUser, email
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
@@ -74,62 +74,6 @@ async def authenticate_user(email: str, password: str):
         )
 
 
-# async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)])-> UserResponse: 
-#     credentials_exception = HTTPException(
-#         status_code=status.HTTP_401_UNAUTHORIZED,
-#         detail="Could not validate credentials",
-#         headers={"WWW-Authenticate": "Bearer"},
-#     )
-#     try:
-#         payload = verify_access_token(token)
-#         email: str = payload.get("sub")
-#         if email is None:
-#             raise credentials_exception
-#         token_data = TokenData(email=email)
-
-#     except InvalidTokenError:
-#         raise credentials_exception
-#     user=get_user_by_email(token_data.email)
-
-#     if user is None:
-#         raise credentials_exception
-    
-#     user_data=UserResponse(**(user.dict()))
-#     return user_data
-
-# async def get_current_user(
-#     token: Annotated[str, Depends(oauth2_scheme)]
-# ):
-#     """Fetch the currently authenticated user or doctor based on the provided JWT token."""
-#     credentials_exception = HTTPException(
-#         status_code=status.HTTP_401_UNAUTHORIZED,
-#         detail="Could not validate credentials",
-#         headers={"WWW-Authenticate": "Bearer"},
-#     )
-
-#     try:
-#         payload = verify_access_token(token)
-#         email: str = payload.get("sub")
-#         if email is None:
-#             raise credentials_exception
-#         token_data = TokenData(email=email)
-        
-#     except InvalidTokenError:
-#         raise credentials_exception
-
-#     # Check if the user exists in both tables
-#     user = get_user_by_email(token_data.email)
-#     if user is None:
-#         raise credentials_exception
-
-#     # Determine if the user is a doctor or a regular user
-#     if user.is_doctor:
-#         doctor = get_doctor_by_email(token_data.email)
-#         if doctor is None:
-#             raise credentials_exception
-#         return DoctorResponse(**doctor.dict())
-
-#     return UserResponse(**user.dict())
 
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)]
@@ -258,9 +202,14 @@ async def forgot_password(email: email):
 async def reset_password(token: str, new_password: str):
     # Verify the token
     user_id = verify_reset_token(token)
+    user=get_user_by_id(user_id)
     # Hash the new password
     hashed_password = hash_password(new_password)
-    update_password(hashed_password, user_id)
+    if user.is_doctor:
+        doctor=get_doctor_by_email(user.email)    
+        update_doctor_password(hashed_password, doctor.id)
+    update_user_password(hashed_password, user_id)
+
     return JSONResponse(status_code=200, content={"message": "Password reset successfully"})
 
 

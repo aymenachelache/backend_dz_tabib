@@ -8,8 +8,16 @@ from src.doctors.schemas import WorkingDay
 
 
 
-def update_doctor(doctor_id: int, profile_data: dict):
+def update_doctor(doctor_id: int, profile_data: dict,user_id: int,user_fields: dict):
     filtered_data = {key: value for key, value in profile_data.items() if key !='assurances'}
+
+    if user_fields:
+        user_query = f"""
+            UPDATE users
+            SET {', '.join([f"{key} = %s" for key in user_fields.keys()])}
+            WHERE id = %s
+        """
+        execute_query(user_query, list(user_fields.values()) + [user_id])
     
     if 'specialization_id' in filtered_data:
         specialization_query = "SELECT id FROM specializations WHERE id = %s"

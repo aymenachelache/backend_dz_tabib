@@ -37,9 +37,9 @@ def add_profile_photo(doctor_id: int, photo: UploadFile):
 
 
 
-def update_doctor_profile(id: int, profile_data: DoctorProfileUpdate):
+def update_doctor_profile(doctor_id: int,user_id: int, profile_data: DoctorProfileUpdate):
 
-    # user_fields = {key: profile_data[key] for key in {"username", "first_name", "last_name", "email"} if key in profile_data}
+    user_fields = {key: profile_data[key] for key in {"username", "first_name", "last_name", "email"} if key in profile_data}
     doctor_fields = {
         key: profile_data[key]
         for key in {
@@ -69,8 +69,8 @@ def update_doctor_profile(id: int, profile_data: DoctorProfileUpdate):
 
     # Perform the update in the database
     try:
-        update_doctor(id, doctor_fields)
-        doctor_data = get_all_doctor_information(id)
+        update_doctor(doctor_id, doctor_fields,user_id, user_fields)
+        doctor_data = get_all_doctor_information(doctor_id)
         if not doctor_data:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Doctor profile not found"

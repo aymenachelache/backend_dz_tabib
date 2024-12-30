@@ -14,11 +14,11 @@ router = APIRouter()
 
 
 @router.put("/profile", response_model=DoctorInformation)
-def update_profile(profile: DoctorProfileUpdate ,doctor=Depends(get_current_doctor)):
+def update_profile(profile: DoctorProfileUpdate ,doctor=Depends(get_current_doctor),user=Depends(get_current_user)):
     """API route for updating a doctor's profile."""
     profile_data = profile.dict(exclude_unset=True)
 
-    return update_doctor_profile(doctor.id, profile_data)
+    return update_doctor_profile(doctor.id,user.id, profile_data)
 
 
 

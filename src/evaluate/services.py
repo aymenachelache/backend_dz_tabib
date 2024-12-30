@@ -22,18 +22,17 @@ def create_review(request: CreateReviewRequest, db: Session):
     cursor = db.cursor()
 
     # Check if id_doctor exists
-    cursor.execute("SELECT COUNT(*) FROM doctors WHERE id = ?", (request.id_doctor,))
+    cursor.execute("SELECT COUNT(*) FROM doctors WHERE id = %s", (request.id_doctor,))
     if cursor.fetchone()[0] == 0:
         raise HTTPException(status_code=404, detail="Doctor not found")
 
     # Check if id_patient (now user_id) exists
-    cursor.execute("SELECT COUNT(*) FROM users WHERE id = ? AND is_doctor = 0", (request.id_patient,))
+    cursor.execute("SELECT COUNT(*) FROM users WHERE id = %s AND is_doctor = 0", (request.id_patient,))
     if cursor.fetchone()[0] == 0:
         raise HTTPException(status_code=404, detail="Patient (user) not found")
-
     # Insert new review into the review table
     insert_review_query = """
-        INSERT INTO review (note, comment) VALUES (?, ?)
+        INSERT INTO review (note, comment) VALUES (%s, %s)
     """
     cursor.execute(insert_review_query, (request.note, request.comment))
     db.commit()
@@ -43,7 +42,7 @@ def create_review(request: CreateReviewRequest, db: Session):
 
     # Insert into the evaluate table
     insert_evaluate_query = """
-        INSERT INTO evaluate (patient_id, doctor_id, review_id) VALUES (?, ?, ?)
+        INSERT INTO evaluate (patient_id, doctor_id, review_id) VALUES (%s, %s, %s)
     """
     cursor.execute(insert_evaluate_query, (request.id_patient, request.id_doctor, review_id))
     db.commit()
