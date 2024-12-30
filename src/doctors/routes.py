@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, File, Query, UploadFile,Form
-from src.doctors.models import get_specializations_from_db
-from src.doctors.schemas import DoctorCreate, DoctorInformation, DoctorProfileUpdate, UserFields
+from src.doctors.models import fetch_assurances, get_specializations_from_db
+from src.doctors.schemas import DoctorInformation, DoctorProfileUpdate
 from src.doctors.services import add_profile_photo, fetch_doctors, get_current_doctor, get_doctor_by_id, update_doctor_profile
 from src.auth.services import get_current_user
 from typing import Annotated, List
@@ -56,6 +56,11 @@ def add_photo(photo: UploadFile = File(...), user=Depends(get_current_doctor)):
 def get_specializations():
 
     return get_specializations_from_db()
+
+@router.get("/assurances")
+def get_assurances():
+
+    return fetch_assurances()
 
 
 

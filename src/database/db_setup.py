@@ -26,10 +26,6 @@ def initialize_database():
             disabled BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             is_doctor TINYINT(1) DEFAULT 0,
-
-            
-
-
             years_of_experience INT,
             state VARCHAR(255),
             city VARCHAR(255),
@@ -41,6 +37,7 @@ def initialize_database():
             specialization_id int,
             latitude DoUBLE,
             longitude DoUBLE,
+            rating float DEFAULT 0,
             FOREIGN KEY (specialization_id) REFERENCES specializations(id) ON DELETE CASCADE
         );
         """
@@ -110,6 +107,40 @@ def initialize_database():
             name VARCHAR(255) NOT NULL
         );
         """
+        create_assurance_table = """
+        CREATE TABLE IF NOT EXISTS assurance (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL
+        );
+        """
+        create_doctor_assurance_table = """
+        CREATE TABLE IF NOT EXISTS doctor_assurance (
+            doctor_id INT,
+            assurance_id INT,
+            FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
+            FOREIGN KEY (assurance_id) REFERENCES assurance(id) ON DELETE CASCADE,
+            PRIMARY KEY (doctor_id, assurance_id)
+        );
+        """
+        create_review_table = """
+        CREATE TABLE IF NOT EXISTS review (
+            ID_review INT AUTO_INCREMENT PRIMARY KEY,
+            note INT NOT NULL,
+            comment VARCHAR(500),
+            CONSTRAINT chk_note CHECK (note BETWEEN 1 AND 5)
+        );
+        """
+        create_evaluate_table = """
+        CREATE TABLE IF NOT EXISTS evaluate (
+            patient_id INT,
+            doctor_id INT,
+            review_id INT,
+            FOREIGN KEY (patient_id) REFERENCES users(id),
+            FOREIGN KEY (doctor_id) REFERENCES doctors(id),
+            FOREIGN KEY (review_id) REFERENCES review(ID_review),
+            PRIMARY KEY (patient_id, doctor_id, review_id)
+        );
+        """
 
         # Execute queries
         try:
@@ -120,6 +151,10 @@ def initialize_database():
             cursor.execute(create_working_days_table)
             cursor.execute(create_working_hours_table)
             cursor.execute(create_appointments_table)
+            cursor.execute(create_assurance_table)
+            cursor.execute(create_doctor_assurance_table)
+            cursor.execute(create_review_table)
+            cursor.execute(create_evaluate_table)
             print("Tables created successfully.")
         except Exception as e:
             print("Error creating tables:", e)

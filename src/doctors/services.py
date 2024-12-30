@@ -56,6 +56,7 @@ def update_doctor_profile(id: int, profile_data: DoctorProfileUpdate):
             "daily_visit_limit",
             "phone_number",
             "specialization_id",
+            "assurances",
             "latitude",
             "longitude",
             "working_days",

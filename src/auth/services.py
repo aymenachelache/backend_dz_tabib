@@ -47,15 +47,17 @@ async def authenticate_user(email: str, password: str):
     # Search in users table first
     user = get_user_by_email(email)
 
-    # If not found, check the doctors table
-    if user.is_doctor:
-        user = get_doctor_by_email(email)
+
     
     if not user or not verify_password(password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password"
         )
+    
+    # If not found, check the doctors table
+    if user.is_doctor:
+        user = get_doctor_by_email(email)
     
     try:
         # Create appropriate response model
