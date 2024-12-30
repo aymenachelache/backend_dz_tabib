@@ -18,7 +18,7 @@ def fetch_assurances(db: Session) -> Dict[int, str]:
     with db.cursor(dictionary=True) as cursor:
         cursor.execute(query)
         rows = cursor.fetchall()
-        return {row["ID_Assurance"]: row["Nom_Assurance"] for row in rows}
+        return {row["id"]: row["name"] for row in rows}
 
 
 def fetch_days_of_week() -> List[str]:
