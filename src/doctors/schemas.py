@@ -36,7 +36,7 @@ class DoctorInformation(BaseModel):
     street: Optional[str]
     spoken_languages: Optional[str]
     zoom_link: Optional[str]
-    daily_visit_limit: Optional[int]
+    visit_price: Optional[float]
     photo: Optional[str] = None
     phone_number: Optional[str]
     specialization_name : Optional[str]
@@ -57,7 +57,7 @@ class DoctorProfileUpdate(BaseModel):
     street: Optional[str] = None
     spoken_languages: Optional[str] = None
     zoom_link: Optional[str] = None
-    daily_visit_limit: Optional[int] = None
+    visit_price: Optional[float] = None
     phone_number: Optional[str] = None
     specialization_id: Optional[int] = None
     assurances: Optional[List[Assurances]]=None 

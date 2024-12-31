@@ -7,6 +7,7 @@ class SpecialiteResponse(BaseModel):
     specialities: Dict[int, str]
 
 class DoctorHomepage(BaseModel):
+    id: int
     firstname: str
     familyname: str
     specialite: Optional[str]=None

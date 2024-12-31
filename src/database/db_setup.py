@@ -30,7 +30,7 @@ def initialize_database():
             street VARCHAR(255),
             spoken_languages TEXT,
             zoom_link VARCHAR(255),
-            daily_visit_limit INT,
+            visit_price float,
             photo VARCHAR(255),
             specialization_id int,
             latitude DoUBLE,

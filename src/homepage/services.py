@@ -19,6 +19,7 @@ def fetch_doctors(page: int, db) -> List[DoctorHomepage]:
     offset = (page - 1) * page_size
     query = """
         SELECT 
+            d.id,
             d.first_name AS firstname, 
             d.last_name AS familyname, 
             s.name AS specialite, 
