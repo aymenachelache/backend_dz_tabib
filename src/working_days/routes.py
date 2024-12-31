@@ -100,8 +100,8 @@ def update_working_day(working_day_id: int, data: WorkingDayUpdate,doctor=Depend
 @router.delete("/working-days/{working_day_id}")
 def delete_working_day(working_day_id: int,doctor=Depends(get_current_doctor)):
     try:
-        remove_working_day(working_day_id)
-        return {"message": "Working day deleted successfully"}
+        if remove_working_day(doctor.id,working_day_id):
+            return {"message": "Working day deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

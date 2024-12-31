@@ -63,22 +63,30 @@ def initialize_database():
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
         """
+        create_days_table = """
+        CREATE TABLE IF NOT EXISTS days (
+            id INT AUTO_INCREMENT PRIMARY KEY,   -- Unique ID for the day
+            day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') UNIQUE NOT NULL  -- Day of the week
+        );
+        """
         create_working_days_table = """
         CREATE TABLE IF NOT EXISTS working_days (
-            day_id INT AUTO_INCREMENT PRIMARY KEY,       -- Unique ID for the working day
-            doctor_id INT NOT NULL,                      -- Foreign key to doctors table
-            day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,  -- Day of the week
-            FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
-            daily_appointment_limit INT NOT NULL DEFAULT 0  -- Maximum number of appointments per day
+            day_id INT NOT NULL,                          -- Foreign key to days table
+            doctor_id INT NOT NULL,                       -- Foreign key to doctors table
+            daily_appointment_limit INT NOT NULL DEFAULT 0,  -- Maximum number of appointments per day
+            PRIMARY KEY (day_id, doctor_id),              -- Composite primary key
+            FOREIGN KEY (day_id) REFERENCES days(id) ON DELETE CASCADE,
+            FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
         );
         """
         create_working_hours_table = """
         CREATE TABLE IF NOT EXISTS working_hours (
             hour_id INT AUTO_INCREMENT PRIMARY KEY,      -- Unique ID for the working hour
             day_id INT NOT NULL,                         -- Foreign key to working_days table
+            doctor_id INT NOT NULL,                      -- Foreign key to working_days table
             start_time TIME NOT NULL,                    -- Start time of the shift
             end_time TIME NOT NULL,                      -- End time of the shift
-            FOREIGN KEY (day_id) REFERENCES working_days(day_id) ON DELETE CASCADE
+            FOREIGN KEY (day_id, doctor_id) REFERENCES working_days(day_id, doctor_id) ON DELETE CASCADE
         );
         """
         create_appointments_table = """
@@ -146,6 +154,7 @@ def initialize_database():
             cursor.execute(create_doctors_table)
             cursor.execute(create_users_table)
             cursor.execute(create_reset_token_table)
+            cursor.execute(create_days_table)
             cursor.execute(create_working_days_table)
             cursor.execute(create_working_hours_table)
             cursor.execute(create_appointments_table)
