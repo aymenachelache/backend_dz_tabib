@@ -24,7 +24,7 @@ def initialize_database():
             disabled BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             is_doctor TINYINT(1) DEFAULT 0,
-            years_of_experience INT,
+            experience_start_date DATE NOT NULL,
             state VARCHAR(255),
             city VARCHAR(255),
             street VARCHAR(255),
@@ -103,7 +103,7 @@ def initialize_database():
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
             FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE,
-            FOREIGN KEY (working_day_id) REFERENCES working_days(day_id) ON DELETE CASCADE
+            FOREIGN KEY (working_day_id) REFERENCES days(id) ON DELETE CASCADE
         );
 
         """
@@ -141,13 +141,13 @@ def initialize_database():
             patient_id INT,
             doctor_id INT,
             review_id INT,
-            FOREIGN KEY (patient_id) REFERENCES users(id),
-            FOREIGN KEY (doctor_id) REFERENCES doctors(id),
-            FOREIGN KEY (review_id) REFERENCES review(ID_review),
+            FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
+            FOREIGN KEY (review_id) REFERENCES review(ID_review) ON DELETE CASCADE,
             PRIMARY KEY (patient_id, doctor_id, review_id)
         );
         """
-
+ 
         # Execute queries
         try:
             cursor.execute(create_specializations_table)

@@ -70,11 +70,11 @@ def search_appointments_by_patient_name(first_name: str, last_name: str,doctor_i
     query_params = [doctor_id]
     
     # Modify the query and parameters based on the presence of first_name and last_name
-    if first_name is not None:
+    if first_name:
         query += " AND users.first_name LIKE %s"
         query_params.append(f"%{first_name}%")
     
-    if last_name is not None:
+    if last_name :
         query += " AND users.last_name LIKE %s"
         query_params.append(f"%{last_name}%")
     
@@ -109,4 +109,34 @@ def fetch_day_appointment(doctor_id: int, appointment_date: str) -> List[dict]:
     """
     params = (doctor_id, appointment_date)
     return execute_query(query, params, fetch_all=True)
+
+def fetch_user_appointment(user_id: int) -> List[dict]:
+    """
+    Retrieve all appointments for a specific user.
+    """
+    query = """
+        SELECT 
+            appointments.id,
+            appointments.appointment_date,
+            appointments.reason,
+            appointments.type,
+            appointments.status,
+            patients.first_name AS patient_first_name,
+            patients.last_name AS patient_last_name,
+            patients.phone_number AS patient_phone_number
+        FROM 
+            appointments
+        JOIN 
+            users AS patients ON appointments.patient_id = patients.id
+        WHERE 
+            appointments.patient_id = %s 
+        ORDER BY 
+        appointments.created_at ASC
+    """
+    params = (user_id,)
+    return execute_query(query, params, fetch_all=True)
+
+def delete_appointment(user_id,appointment_id):
+    query = "DELETE FROM appointments WHERE patient_id = %s and id = %s "
+    return execute_query(query, (user_id,appointment_id), check_rows_affected=True)
 

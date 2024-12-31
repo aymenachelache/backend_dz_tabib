@@ -16,10 +16,11 @@ from src.working_days.schemas import WorkingDayResponse
 
 def add_working_day_and_hours(doctor_id, day_of_week, daily_appointment_limit, hours):
     day_id_dict = get_day_of_week_id(day_of_week)
-    day_id = day_id_dict["id"]
-    if day_id is None:
+    if not day_id_dict:
         raise HTTPException(status_code=400, detail="Invalid day of week")
     
+    day_id = day_id_dict["id"]
+
     if verify_working_day(doctor_id, day_id): 
         raise HTTPException(status_code=400, detail="Working day already exists")
     
@@ -48,9 +49,8 @@ def add_working_day_and_hours(doctor_id, day_of_week, daily_appointment_limit, h
 # Service to fetch all working days
 def fetch_working_days(doctor_id):
     working_days = get_working_days(doctor_id)
-    if working_days is None:
+    if not working_days :
         raise HTTPException(status_code=404, detail="No working days found")
-    
     data = []
 
     for day in working_days:
@@ -95,6 +95,10 @@ def modify_working_day(doctor_id,day_id, working_hour_id,daily_appointment_limit
 
 # Service to delete a working day
 def remove_working_day(doctor_id,day_id):
+    day=get_working_day(doctor_id,day_id)
+    if not day:
+        raise HTTPException(status_code=404, detail="No Working day with this id")
+    
     day_deleted=delete_working_day(doctor_id,day_id)
     if not day_deleted:
         raise HTTPException(status_code=500, detail="Error deleting working day") 

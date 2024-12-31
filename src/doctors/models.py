@@ -51,7 +51,8 @@ def get_all_doctor_information(user_id: int):
     query = """
         SELECT 
             d.*, 
-            s.name AS specialization_name, 
+            s.name AS specialization_name,
+            TIMESTAMPDIFF(YEAR, experience_start_date, CURDATE()) AS years_of_experience,
             GROUP_CONCAT(a.name) AS assurances
         FROM 
             doctors d
@@ -76,7 +77,7 @@ def get_all_doctor_information(user_id: int):
 def get_doctors(page: int, limit: int):
     offset = (page - 1) * limit
     query = """
-        SELECT d.*, s.name AS specialization_name,
+        SELECT d.*, s.name AS specialization_name,TIMESTAMPDIFF(YEAR, experience_start_date, CURDATE()) AS years_of_experience,
         GROUP_CONCAT(a.name) AS assurances
         FROM doctors d
         LEFT JOIN specializations s ON d.specialization_id = s.id

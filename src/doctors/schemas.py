@@ -30,6 +30,7 @@ class DoctorInformation(BaseModel):
     is_doctor: bool
     created_at: datetime.datetime
     disabled: bool = False
+    experience_start_date: Optional[datetime.date]
     years_of_experience: Optional[int]
     state: Optional[str]
     city: Optional[str]
@@ -51,7 +52,7 @@ class DoctorProfileUpdate(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     email: Optional[str] = None
-    years_of_experience: Optional[int] = None
+    experience_start_date: Optional[datetime.date] = None
     state: Optional[str] = None
     city: Optional[str] = None
     street: Optional[str] = None

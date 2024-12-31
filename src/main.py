@@ -40,6 +40,7 @@ from src.evaluate.routes import router as evaluate_router
 app.include_router(auth_router)
 app.include_router(doctor_router)
 app.include_router(working_days_router)
+app.include_router(appointment_router)
 app.include_router(homepage_router)
 app.include_router(adv_search_router)
 app.include_router(evaluate_router)

@@ -11,12 +11,12 @@ class WorkingHour(BaseModel):
 
 class WorkingHourUpdate(BaseModel):
     hour_id: Optional[int]=None
-    start_time:Optional[str]=None
-    end_time: Optional[str]=None
+    start_time:Optional[datetime.time]=None
+    end_time: Optional[datetime.time]=None
 
 class CreateHour(BaseModel):
-    start_time:str
-    end_time: str
+    start_time:datetime.time
+    end_time: datetime.time
 
 # Schema for creating a working day with hours
 class WorkingDayCreate(BaseModel):
@@ -37,18 +37,6 @@ class WorkingDayResponse(BaseModel):
     daily_appointment_limit: int
     hours: Optional[List[WorkingHour]] = None
 
-class CreateResponse(BaseModel):
-    day_id: int
-    day_of_week: str
-    daily_appointment_limit: int
-    hours: Optional[List[CreateHour]] = None
-
-class WorkingDay(BaseModel):
-    day_id: int
-    day_of_week: str
-    daily_appointment_limit: int
-    start_time: str  # Store as seconds instead of timedelta
-    end_time: str    # Store as seconds instead of timedelta
 
     class Config:
         # Convert timedelta to seconds when returning from the API

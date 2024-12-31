@@ -4,7 +4,7 @@ from typing import List, Optional
 from src.auth.services import get_current_user
 from src.doctors.services import get_current_doctor
 from src.working_days.models import get_working_day
-from src.working_days.schemas import CreateResponse, WorkingDayCreate, WorkingDayUpdate, WorkingDayResponse,WorkingDay
+from src.working_days.schemas import WorkingDayCreate, WorkingDayUpdate, WorkingDayResponse
 from src.working_days.services import (
     add_working_day_and_hours,
     fetch_working_days,
@@ -82,7 +82,7 @@ def create_working_days(data: List[WorkingDayCreate],doctor=Depends(get_current_
         raise HTTPException(status_code=500, detail="Error creating working day")
 
 @router.get("/working-days/{doctor_id}", response_model=List[WorkingDayResponse])
-def get_working_days(doctor_id: int,user=Depends(get_current_user)):
+def get_working_days(doctor_id: int):
     try:
 
         result=fetch_working_days(doctor_id)

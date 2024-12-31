@@ -47,7 +47,7 @@ def update_doctor_profile(doctor_id: int,user_id: int, profile_data: DoctorProfi
             "first_name",
             "last_name",
             "email",
-            "years_of_experience",
+            "experience_start_date",
             "state",
             "city",
             "street",

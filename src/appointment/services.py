@@ -4,7 +4,7 @@
 
 from datetime import date
 from typing import List
-from src.appointment.model import add_appointment, fetch_day_appointment, get_appointment, get_day_appointments_number, search_appointments_by_patient_name, update_appointment_attrs, user_appoi_number_in_the_day
+from src.appointment.model import add_appointment, delete_appointment, fetch_day_appointment, fetch_user_appointment, get_appointment, get_day_appointments_number, search_appointments_by_patient_name, update_appointment_attrs, user_appoi_number_in_the_day
 from src.database.query_helper import execute_query
 from src.working_days.models import get_working_day
 from datetime import datetime
@@ -24,6 +24,7 @@ def create_appointment(data,user):
         )
     
     if working_day['day_of_week'] != day_name:
+        print(working_day['day_of_week'],day_name)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="the doctor is not working in this date."
         )
@@ -57,7 +58,7 @@ def update_appointment(appointment_id, data):
 
     appointment=get_appointment(appointment_id)
 
-    if appointment is None:
+    if not appointment :
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Appointment not found."
         )
@@ -81,6 +82,39 @@ def get_day_appointment(doctor_id: int, appointment_date: str) -> List[dict]:
     if not appointments:
         raise HTTPException(status_code=404, detail="No appointments found for this date.")
     return appointments
+
+def get_user_appointment(user_id: int) -> List[dict]:
+
+    appointments = fetch_user_appointment(user_id)
+    filtred_appointments=[]
+    if not appointments:
+        raise HTTPException(status_code=404, detail="No appointments found.")
+    
+    for appointment in appointments:
+        if appointment['appointment_date'] >= date.today():
+            filtred_appointments.append(appointment)
+    return appointments
+
+def remove_appointment(user_id,appointment_id):
+    print("2")
+    appointment=get_appointment(appointment_id)
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found.")
+    
+    if appointment['patient_id'] != user_id:
+        raise HTTPException(status_code=401, detail="You are not authorized to delete this appointment.")
+    
+    if appointment['appointment_date'] < date.today():
+        raise HTTPException(status_code=400, detail="Cannot delete an appointment for a past date.")
+    
+    if appointment['status'] != 'pending':
+        raise HTTPException(status_code=400, detail="Cannot delete an appointment that is not pending.")
+    
+    print("3")
+    appointment_deleted=delete_appointment(user_id,appointment_id)
+    if not appointment_deleted:
+        raise HTTPException(status_code=500, detail="Error deleting working day") 
+    return appointment_deleted
 
 
 
