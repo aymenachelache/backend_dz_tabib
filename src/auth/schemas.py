@@ -61,7 +61,7 @@ class UserFromDB(UserRegister):
 
 
 class SearchUser(BaseModel):
-    username: str | None=None
+    username: Optional[str] = None
     email: EmailStr
 
     
