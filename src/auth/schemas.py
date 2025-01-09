@@ -1,6 +1,6 @@
 # auth/schemas.py
 from fastapi import Query
-from pydantic import BaseModel,EmailStr,Field, ValidationError
+from pydantic import BaseModel, ConfigDict,EmailStr,Field, ValidationError
 from typing import Annotated,List,Optional
 import datetime
 
@@ -76,8 +76,7 @@ class UserResponse(BaseModel):
     is_doctor: bool
     created_at: datetime.datetime
     disabled: bool = False
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 

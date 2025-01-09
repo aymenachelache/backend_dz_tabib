@@ -10,14 +10,14 @@ class AssuranceResponse(BaseModel):
     assurances: Dict[int, str]
 
 class DoctorHomepage(BaseModel):
-    firstname: str
-    familyname: str
-    specialite: str
-    state: str
-    city: str
-    street: str
-    photo: str
-    rating: float
+    firstname: Optional[str] = None
+    familyname: Optional[str] = None
+    specialite: Optional[str] = None
+    state: Optional[str] = None
+    city: Optional[str] = None
+    street: Optional[str] = None
+    photo: Optional[str] = None
+    rating: Optional[float] = None
 
 class AdvancedSearchRequest(BaseModel):
     specialite: Optional[str] = None

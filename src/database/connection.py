@@ -39,8 +39,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def create_db_connection(create_db_if_missing=False):
+def create_db_connection(create_db_if_missing=False, test_mode=False):
     """Establish and return a connection to the MySQL database."""
+    db_name = os.getenv("DB_TEST_NAME") if test_mode else os.getenv("DB_NAME")
     try:
         # Connect to MySQL server (without specifying the database)
         server_connection = connection.MySQLConnection(
@@ -63,7 +64,7 @@ def create_db_connection(create_db_if_missing=False):
             host=os.getenv("DB_HOST"),
             user=os.getenv("DB_USER"),
             password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME"),
+            database=db_name,
         )
         if cnx.is_connected():
             print(f"Successfully connected to the database `{os.getenv('DB_NAME')}`")
@@ -76,4 +77,5 @@ def create_db_connection(create_db_if_missing=False):
             print("Database does not exist")
         else:
             print(err)
-        return None
+            
+        return None 
