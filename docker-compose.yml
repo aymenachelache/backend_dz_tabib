@@ -6,10 +6,10 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=yourpassword
-      - DB_NAME=dz_tabib
+      - DB_HOST=dsql8.freemysqlhosting.netb
+      - DB_USER=sql8756877
+      - DB_PASSWORD=yourpasswoGnDzrzGMFYrd
+      - DB_NAME=sql8756877
       - DB_TEST_NAME=dz_tabib_test
       - JWT_SECRET_KEY=your_secret_key
       - JWT_ALGORITHM=HS256
