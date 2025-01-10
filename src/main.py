@@ -2,6 +2,7 @@
 from src.database.db_setup import initialize_database
 from fastapi import FastAPI
 from src.auth.routes import router as auth_router
+from src.database.query_helper import execute_query
 from src.doctors.routes import router as doctor_router
 from src.adv_search.routes import router as adv_search_router
 from src.homepage.routes import router as homepage_router
@@ -48,6 +49,14 @@ app.include_router(evaluate_router)
 @app.on_event("startup")
 async def on_startup():
     # create_tables()
+    
+    query = """
+        show tables;
+    """
+    
+    user = execute_query(query,fetch_all=True)
+    print(user)
+
     initialize_database()
     asyncio.create_task(delete_expired_tokens())
     print("Application is starting up...")

@@ -1,7 +1,5 @@
-
-
-
 from .connection import create_db_connection
+
 
 def initialize_database():
     """Initialize the database and create tables if they don't already exist."""
@@ -9,7 +7,6 @@ def initialize_database():
     connection = create_db_connection(create_db_if_missing=True)
     if connection:
         cursor = connection.cursor()
-
 
         # SQL queries for table creation
         create_doctors_table = """
@@ -59,7 +56,7 @@ def initialize_database():
             user_id INT NOT NULL,
             reset_token VARCHAR(255) NOT NULL,
             expiry DATETIME NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
         """
@@ -100,13 +97,14 @@ def initialize_database():
             type ENUM('online', 'face_to_face') DEFAULT 'face_to_face' NOT NULL,
             status ENUM('pending', 'cancelled', 'completed') NOT NULL DEFAULT 'pending', -- Appointment status
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
             FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (working_day_id) REFERENCES days(id) ON DELETE CASCADE
         );
 
         """
+                    # updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
         create_specializations_table = """
         CREATE TABLE IF NOT EXISTS specializations (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -147,7 +145,7 @@ def initialize_database():
             PRIMARY KEY (patient_id, doctor_id, review_id)
         );
         """
- 
+
         # Execute queries
         try:
             cursor.execute(create_specializations_table)
