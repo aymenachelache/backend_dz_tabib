@@ -24,23 +24,3 @@ services:
       db:
         condition: service_healthy
     command: ["./wait-for-db.sh", "db", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: yourpassword
-      MYSQL_DATABASE: dz_tabib
-      MYSQL_USER: root
-      MYSQL_PASSWORD: yourpassword
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
-      interval: 5s
-      timeout: 10s
-      retries: 10
-
-volumes:
-  db_data:
