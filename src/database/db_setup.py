@@ -21,7 +21,7 @@ def initialize_database():
             disabled BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             is_doctor TINYINT(1) DEFAULT 0,
-            experience_start_date DATE NOT NULL,
+            experience_start_date DATE,
             state VARCHAR(255),
             city VARCHAR(255),
             street VARCHAR(255),
