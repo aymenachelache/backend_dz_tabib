@@ -26,9 +26,10 @@ def save_photo(photo: UploadFile) -> str:
 
 def add_profile_photo(doctor_id: int, photo: UploadFile):
     photo_path = save_photo(photo)
-    update_doctor(doctor_id, {"photo": photo_path})
+    doctor_fields = {"photo": photo_path}
+    update_doctor(doctor_id,doctor_fields, None, None) 
 
-    doctor_data = get_all_doctor_information(doctor_id)
+    doctor_data = get_all_doctor_information(doctor_id) 
     if not doctor_data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Doctor profile not found"
