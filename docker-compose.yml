@@ -1,3 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=bc4s8xjte8df8sevulmi-mysql.services.clever-cloud.com
+      - DB_USER=uqvnlhgxomior3px
+      - DB_PASSWORD=DFcNTIql6q0MqUc3sVok
+      - DB_NAME=bc4s8xjte8df8sevulmi
+      - DB_TEST_NAME=bc4s8xjte8df8sevulmi
+      - JWT_SECRET_KEY=your_secret_key
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+      - MAIL_USERNAME=dztabibapp@gmail.com
+      - MAIL_PASSWORD="jzrr kcfy qwql lpds"
+      - MAIL_SERVER=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_FROM=dztabibapp@gmail.com
+      - MAIL_FROM_NAME=DZ-TABIB
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["./wait-for-db.sh", "db", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
 # version: '3.8'
 
 # services:
@@ -6,10 +33,10 @@
 #     ports:
 #       - "8000:8000"
 #     environment:
-#       - DB_HOST=dsql8.freemysqlhosting.netb
-#       - DB_USER=sql8756877
-#       - DB_PASSWORD=yourpasswoGnDzrzGMFYrd
-#       - DB_NAME=sql8756877
+#       - DB_HOST=db
+#       - DB_USER=root
+#       - DB_PASSWORD=sql8756877
+#       - DB_NAME=dz_tabib
 #       - DB_TEST_NAME=dz_tabib_test
 #       - JWT_SECRET_KEY=your_secret_key
 #       - JWT_ALGORITHM=HS256
@@ -20,55 +47,28 @@
 #       - MAIL_PORT=587
 #       - MAIL_FROM=dztabibapp@gmail.com
 #       - MAIL_FROM_NAME=DZ-TABIB
+#       - MYSQL_ROOT_PASSWORD=sql8756877
 #     depends_on:
 #       db:
 #         condition: service_healthy
 #     command: ["./wait-for-db.sh", "db", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-version: '3.8'
+#   db:
+#     image: mysql:5.7
+#     environment:
+#       MYSQL_ROOT_PASSWORD: sql8756877
+#       MYSQL_DATABASE: dz_tabib
+#       MYSQL_USER: root
+#       MYSQL_PASSWORD: sql8756877
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - db_data:/var/lib/mysql
+#     healthcheck:
+#       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+#       interval: 5s
+#       timeout: 10s
+#       retries: 10
 
-services:
-  app:
-    build: .
-    ports:
-      - "8000:8000"
-    environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=sql8756877
-      - DB_NAME=dz_tabib
-      - DB_TEST_NAME=dz_tabib_test
-      - JWT_SECRET_KEY=your_secret_key
-      - JWT_ALGORITHM=HS256
-      - ACCESS_TOKEN_EXPIRE_MINUTES=60
-      - MAIL_USERNAME=dztabibapp@gmail.com
-      - MAIL_PASSWORD="jzrr kcfy qwql lpds"
-      - MAIL_SERVER=smtp.gmail.com
-      - MAIL_PORT=587
-      - MAIL_FROM=dztabibapp@gmail.com
-      - MAIL_FROM_NAME=DZ-TABIB
-      - MYSQL_ROOT_PASSWORD=sql8756877
-    depends_on:
-      db:
-        condition: service_healthy
-    command: ["./wait-for-db.sh", "db", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: sql8756877
-      MYSQL_DATABASE: dz_tabib
-      MYSQL_USER: root
-      MYSQL_PASSWORD: sql8756877
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
-      interval: 5s
-      timeout: 10s
-      retries: 10
-
-volumes:
-  db_data:
+# volumes:
+#   db_data:
