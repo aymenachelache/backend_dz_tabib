@@ -113,8 +113,7 @@ def get_doctor_by_id(id: int):
 
 def fetch_doctors(page: int, limit: int):
     doctors = get_doctors(page, limit)
-
-    if not doctors:
+    if not doctors or doctors[0]["id"]==None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="no doctors found"
         )
