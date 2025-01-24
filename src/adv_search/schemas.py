@@ -10,6 +10,7 @@ class AssuranceResponse(BaseModel):
     assurances: Dict[int, str]
 
 class DoctorHomepage(BaseModel):
+    id: Optional[int] = None
     firstname: Optional[str] = None
     familyname: Optional[str] = None
     specialite: Optional[str] = None

@@ -39,6 +39,7 @@ def search_doctors(
 ) -> List[DoctorHomepage]:
     base_query = """
         SELECT DISTINCT
+            d.id,
             d.first_name AS firstname,
             d.last_name AS familyname,
             s.name AS specialite,
