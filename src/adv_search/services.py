@@ -14,7 +14,7 @@ def fetch_specialities(db: Session) -> Dict[int, str]:
 
 
 def fetch_assurances(db: Session) -> Dict[int, str]:
-    query = "SELECT id , name FROM Assurance"
+    query = "SELECT id , name FROM assurance"
     with db.cursor(dictionary=True) as cursor:
         cursor.execute(query)
         rows = cursor.fetchall()
@@ -51,7 +51,7 @@ def search_doctors(
         FROM doctors d
         LEFT JOIN specializations s ON d.specialization_id = s.id
         LEFT JOIN Doctor_Assurance da ON d.id = da.Doctor_ID
-        LEFT JOIN Assurance a ON da.Assurance_ID = a.id
+        LEFT JOIN assurance a ON da.assurance_ID = a.id
         LEFT JOIN working_days wd ON d.id = wd.doctor_id
         WHERE 1=1
     """
@@ -69,7 +69,7 @@ def search_doctors(
         params.extend([loc, loc, loc])
 
     if criteria.get("assurance"):
-        conditions.append("a.Nom_Assurance = %s")
+        conditions.append("a.Nom_assurance = %s")
         params.append(criteria["assurance"])
 
     if criteria.get("disponibilite"):
