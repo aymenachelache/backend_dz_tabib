@@ -12,7 +12,7 @@ def fetch_reviews_by_doctor(id_doctor: int, db: Session) -> List[ReviewResponse]
         FROM review r
         JOIN evaluate e ON r.ID_review = e.review_id
         JOIN users u ON e.patient_id = u.id
-        WHERE e.doctor_id = ? AND u.is_doctor = 0
+        WHERE e.doctor_id = %s AND u.is_doctor = 0
     """
     with db.cursor(dictionary=True) as cursor:
         cursor.execute(query, (id_doctor,))
