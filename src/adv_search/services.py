@@ -50,7 +50,7 @@ def search_doctors(
             d.rating
         FROM doctors d
         LEFT JOIN specializations s ON d.specialization_id = s.id
-        LEFT JOIN Doctor_assurance da ON d.id = da.Doctor_ID
+        LEFT JOIN doctor_assurance da ON d.id = da.Doctor_ID
         LEFT JOIN assurance a ON da.assurance_ID = a.id
         LEFT JOIN working_days wd ON d.id = wd.doctor_id
         WHERE 1=1
@@ -69,7 +69,7 @@ def search_doctors(
         params.extend([loc, loc, loc])
 
     if criteria.get("assurance"):
-        conditions.append("a.Nom_assurance = %s")
+        conditions.append("a.name = %s")
         params.append(criteria["assurance"])
 
     if criteria.get("disponibilite"):
