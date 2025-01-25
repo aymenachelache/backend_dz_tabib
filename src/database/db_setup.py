@@ -1,10 +1,10 @@
 from .connection import create_db_connection
 
 
-def initialize_database(test=False):
+def initialize_database(create_db_if_missing=False,test=False):
     """Initialize the database and create tables if they don't already exist."""
     # Ensure database exists
-    connection = create_db_connection(test=test)
+    connection = create_db_connection(create_db_if_missing=create_db_if_missing ,test=test)
     if connection:
         cursor = connection.cursor()
 

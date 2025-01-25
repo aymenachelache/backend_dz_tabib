@@ -49,7 +49,8 @@ app.include_router(evaluate_router)
 @app.on_event("startup")
 async def on_startup():
     # create_tables()
-    
+    initialize_database(create_db_if_missing=True)
+
     query = """
         show tables;
     """
@@ -57,7 +58,6 @@ async def on_startup():
     user = execute_query(query,fetch_all=True)
     print(user)
 
-    initialize_database()
     asyncio.create_task(delete_expired_tokens())
     print("Application is starting up...")
 

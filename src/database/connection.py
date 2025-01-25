@@ -65,8 +65,8 @@ def create_db_connection(create_db_if_missing=False, test=False):
         # Create the database if it doesn't exist
         if create_db_if_missing:
             cursor = server_connection.cursor()
-            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {os.getenv('DB_NAME')}")
-            print(f"Database `{os.getenv('DB_NAME')}` ensured to exist.")
+            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
+            print(f"Database `{db_name}` ensured to exist.")
             cursor.close()
 
         # Connect to the specific database

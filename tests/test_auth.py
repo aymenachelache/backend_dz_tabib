@@ -25,15 +25,15 @@ def clean_test_database():
     cursor.close()
     conn.close()
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def setup_test_database():
     """Clean and initialize the test database before each test."""
-    initialize_database(test=True)
+    initialize_database(create_db_if_missing=True,test=True)
     clean_test_database()
     
 
 class TestRegisterUser:
-    @pytest.fixture
+    @pytest.fixture(scope="module", autouse=True)
     def setup(self, setup_test_database):
         pass
 
@@ -125,7 +125,7 @@ class TestRegisterUser:
         assert response.json()["detail"] == "Username or email already taken"
 
 class TestLogin:
-    @pytest.fixture(scope="function", autouse=True)
+    @pytest.fixture(scope="module", autouse=True)
     def setup(self, setup_test_database):
         # Register a user for login tests
         client.post(
