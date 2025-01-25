@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from src.database.connection import create_db_connection
 from src.evaluate.schemas import DoctorReviewsResponse, CreateReviewRequest
-from src.evaluate.services import fetch_reviews_by_doctor, create_review, calculate_avg_rating
+from src.evaluate.services import fetch_reviews_by_doctor, create_review, calculate_avg_rating,fetch_reviews_by_patient
 from src.auth.services import get_current_user
 from src.auth.schemas import UserResponse
 from typing import List,Dict
@@ -15,6 +15,12 @@ router = APIRouter()
 def get_reviews(id_doctor: int, db: Session = Depends(create_db_connection)):
     """Endpoint to fetch all reviews related to a doctor"""
     reviews = fetch_reviews_by_doctor(id_doctor, db)
+    return {"reviews": reviews}
+
+@router.get("/evaluate/patient", response_model=DoctorReviewsResponse)
+def get_reviews(id_patient: int, db: Session = Depends(create_db_connection)):
+    """Endpoint to fetch all reviews related to a doctor"""
+    reviews = fetch_reviews_by_patient(id_patient, db)
     return {"reviews": reviews}
 
 @router.post("/evaluate/create")
