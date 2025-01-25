@@ -25,7 +25,9 @@ app.mount("/uploads", StaticFiles(directory="uploads/photos"), name="uploads")
 # Allow requests from your frontend URL
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Add your frontend URL here
+    allow_origins=[
+        "https://meek-kleicha-804f82.netlify.app"
+    ],  # Add your frontend URL here
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
@@ -46,6 +48,7 @@ app.include_router(homepage_router)
 app.include_router(adv_search_router)
 app.include_router(evaluate_router)
 
+
 @app.on_event("startup")
 async def on_startup():
     # create_tables()
@@ -54,8 +57,8 @@ async def on_startup():
     query = """
         show tables;
     """
-    
-    user = execute_query(query,fetch_all=True)
+
+    user = execute_query(query, fetch_all=True)
     print(user)
 
     asyncio.create_task(delete_expired_tokens())
