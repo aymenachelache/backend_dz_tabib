@@ -39,15 +39,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def create_db_connection(create_db_if_missing=False, test_mode=False):
-    """Establish and return a connection to the MySQL database."""
-    db_name = os.getenv("DB_TEST_NAME") if test_mode else os.getenv("DB_NAME")
+def create_db_connection(create_db_if_missing=False, test=False):
+    """Establish and return a connection to the PostgreSQL database."""
+    test_mode = os.getenv("TEST_MODE", "False").lower() == "true"
+    if test_mode or test:
+        db_host = os.getenv("DB_TEST_HOST")
+        db_user = os.getenv("DB_TEST_USER")
+        db_password = os.getenv("DB_TEST_PASSWORD")
+        db_name = os.getenv("DB_TEST_NAME")
+    else:
+        db_host = os.getenv("DB_HOST")
+        db_user = os.getenv("DB_USER")
+        db_password = os.getenv("DB_PASSWORD")
+        db_name = os.getenv("DB_NAME")
     try:
         # Connect to MySQL server (without specifying the database)
         server_connection = connection.MySQLConnection(
-            host=os.getenv("DB_HOST"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
+            host=db_host,
+            user=db_user,
+            password=db_password,
         )
         if server_connection.is_connected():
             print("Successfully connected to the MySQL server")
@@ -61,9 +71,9 @@ def create_db_connection(create_db_if_missing=False, test_mode=False):
 
         # Connect to the specific database
         cnx = connection.MySQLConnection(
-            host=os.getenv("DB_HOST"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
+            host=db_host,
+            user=db_user,
+            password=db_password,
             database=db_name,
         )
         if cnx.is_connected():

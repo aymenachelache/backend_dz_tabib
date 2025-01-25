@@ -3,6 +3,7 @@ from src.database.connection import create_db_connection
 def execute_query(query: str, params: tuple = (), fetch_one=False, fetch_all=False, return_last_id=False,check_rows_affected=False):
     """Execute a database query with provided parameters."""
     connection = create_db_connection()
+    print("connection",connection)
     cursor = connection.cursor(dictionary=True)
     try:
         cursor.execute(query, params)

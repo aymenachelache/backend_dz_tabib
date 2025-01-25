@@ -9,32 +9,80 @@ from src.doctors.models import (
 )
 from src.doctors.schemas import DoctorInformation, DoctorProfileUpdate
 from typing import Annotated
+import cloudinary
+import cloudinary.uploader
 
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
 
 UPLOAD_DIR = "uploads/photos/"  # Directory to save photos
 DEFAULT_PHOTO = os.path.join(UPLOAD_DIR, "default.png")
 
+def upload_photo_to_cloudinary(photo: UploadFile) -> str:
+    """Upload a photo to Cloudinary and return the public URL."""
+    try:
+        # Upload the file to Cloudinary with transformations
+        result = cloudinary.uploader.upload(
+            photo.file,
+            folder="profile_photos",
+            transformation=[
+                {"width": 200, "height": 200, "crop": "fill"},  # Resize and crop to 200x200
+            ],
+        )
+        return result["secure_url"]
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to upload photo: {str(e)}",
+        )
+    
+def delete_photo_from_cloudinary(photo_url: str):
+    """Delete a photo from Cloudinary."""
+    try:
+        # Extract the public ID from the URL
+        public_id = photo_url.split("/")[-1].split(".")[0]
+        cloudinary.uploader.destroy(public_id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete photo: {str(e)}",
+        )
 
-def save_photo(photo: UploadFile) -> str:
-    # Save the uploaded photo and return its path
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
-    file_path = os.path.join(UPLOAD_DIR, photo.filename)
-    with open(file_path, "wb") as f:
-        f.write(photo.file.read())
-    return file_path
+# def save_photo(photo: UploadFile) -> str:
+#     # Save the uploaded photo and return its path
+#     os.makedirs(UPLOAD_DIR, exist_ok=True)
+#     file_path = os.path.join(UPLOAD_DIR, photo.filename)
+#     with open(file_path, "wb") as f:
+#         f.write(photo.file.read())
+#     return file_path
 
 
 def add_profile_photo(doctor_id: int, photo: UploadFile):
-    photo_path = save_photo(photo)
-    doctor_fields = {"photo": photo_path}
-    update_doctor(doctor_id,doctor_fields, None, None) 
-
-    doctor_data = get_all_doctor_information(doctor_id) 
+    """Add or update a doctor's profile photo using Cloudinary."""
+    # Fetch the current doctor data
+    doctor_data = get_all_doctor_information(doctor_id)
     if not doctor_data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Doctor profile not found"
         )
-    return DoctorInformation(**doctor_data)
+
+    # Delete the old photo if it exists
+    if doctor_data.get("photo"):
+        delete_photo_from_cloudinary(doctor_data["photo"])
+
+    # Upload the new photo to Cloudinary
+    photo_url = upload_photo_to_cloudinary(photo)
+
+    # Update the doctor's profile with the new photo URL
+    doctor_fields = {"photo": photo_url}
+    update_doctor(doctor_id, doctor_fields, None, None)
+
+    # Fetch and return the updated doctor data
+    updated_doctor_data = get_all_doctor_information(doctor_id)
+    return DoctorInformation(**updated_doctor_data)
 
 
 
