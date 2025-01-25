@@ -89,6 +89,7 @@ def get_doctors(page: int, limit: int):
             doctor_assurance da ON d.id = da.doctor_id
         LEFT JOIN 
             assurance a ON da.assurance_id = a.id
+        GROUP BY d.id
         LIMIT %s OFFSET %s
     """
     doctors = execute_query(query, params=(limit, offset), fetch_all=True)
