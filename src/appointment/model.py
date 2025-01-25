@@ -123,11 +123,18 @@ def fetch_user_appointment(user_id: int) -> List[dict]:
             appointments.status,
             patients.first_name AS patient_first_name,
             patients.last_name AS patient_last_name,
-            patients.phone_number AS patient_phone_number
+            d.first_name AS doctor_first_name,
+            d.last_name AS doctor_last_name,
+            d.phone_number AS doctor_phone_number,
+            s.name AS doctor_specialization
         FROM 
             appointments
         JOIN 
             users AS patients ON appointments.patient_id = patients.id
+        JOIN   
+            doctors AS d ON appointments.doctor_id = d.id
+        JOIN 
+            specializations AS s ON d.specialization_id = s.id
         WHERE 
             appointments.patient_id = %s 
         ORDER BY 
