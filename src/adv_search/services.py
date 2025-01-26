@@ -3,6 +3,7 @@
 from typing import List, Dict
 from sqlalchemy.orm import Session
 from src.adv_search.schemas import DoctorHomepage
+from src.database.query_helper import execute_query
 
 
 def fetch_specialities(db: Session) -> Dict[int, str]:
@@ -53,6 +54,7 @@ def search_doctors(
         LEFT JOIN doctor_assurance da ON d.id = da.Doctor_ID
         LEFT JOIN assurance a ON da.assurance_ID = a.id
         LEFT JOIN working_days wd ON d.id = wd.doctor_id
+        LEFT JOIN days ON wd.day_id = days.id
         WHERE 1=1
     """
 
@@ -73,16 +75,21 @@ def search_doctors(
         params.append(criteria["assurance"])
 
     if criteria.get("disponibilite"):
-        conditions.append("wd.day_of_week = %s")
+        conditions.append("days.day_of_week = %s")
         params.append(criteria["disponibilite"])
 
     if conditions:
         base_query += " AND " + " AND ".join(conditions)
+    print(conditions)
+    
 
     base_query += " ORDER BY d.first_name, d.last_name LIMIT 6 OFFSET %s"
     params.append((page - 1) * 6)
+    print(base_query)
+    print(params)
 
-    with db.cursor(dictionary=True) as cursor:
-        cursor.execute(base_query, params)
-        rows = cursor.fetchall()
-        return [DoctorHomepage(**row) for row in rows]
+
+    # rows = cursor.fetchall()
+    rows= execute_query(base_query,params,fetch_all=True)
+    print(rows)
+    return rows
