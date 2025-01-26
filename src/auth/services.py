@@ -178,7 +178,7 @@ async def forgot_password(email: email):
         set_reset_token_in_db(user.id,token,expiry)
 
         # Construct the reset link
-        reset_link = f"http://localhost:5173/reset-password?token={token}"
+        reset_link = f"https://dz-tabib-unot.vercel.app/reset-password?token={token}"
 
         # Email content
         subject = "Password Reset Request"
