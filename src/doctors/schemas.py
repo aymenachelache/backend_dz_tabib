@@ -31,7 +31,7 @@ class DoctorInformation(BaseModel):
     created_at: datetime.datetime
     disabled: bool = False
     experience_start_date: Optional[datetime.date]
-    years_of_experience: Optional[int]
+    years_of_experience: Optional[int]=0
     state: Optional[str]
     city: Optional[str]
     street: Optional[str]
