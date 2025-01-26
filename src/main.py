@@ -25,9 +25,7 @@ app.mount("/uploads", StaticFiles(directory="uploads/photos"), name="uploads")
 # Allow requests from your frontend URL
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://meek-kleicha-804f82.netlify.app"
-    ],  # Add your frontend URL here
+    allow_origins=["http://localhost:5173","https://meek-kleicha-804f82.netlify.app/"],  # Add your frontend URL here
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
