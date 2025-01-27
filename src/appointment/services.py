@@ -42,7 +42,7 @@ def create_appointment(data,user):
             status_code=status.HTTP_400_BAD_REQUEST, detail="No more appointments available for this working day."
         )
     
-    user_appointment_number= user_appoi_number_in_the_day(user.id,data['working_day_id'],data['date'])
+    user_appointment_number= user_appoi_number_in_the_day(user.id,data['working_day_id'],data['date'],data['doctor_id'])
 
     if user_appointment_number['user_appointment_number'] :
         raise HTTPException(
