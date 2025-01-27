@@ -103,6 +103,7 @@ def update_doctor_profile(doctor_id: int,user_id: int, profile_data: DoctorProfi
             "spoken_languages",
             "zoom_link",
             "daily_visit_limit",
+            "visit_price",
             "phone_number",
             "specialization_id",
             "assurances",
