@@ -12,26 +12,25 @@ from typing import List,Dict
 router = APIRouter()
 
 @router.get("/evaluate", response_model=DoctorReviewsResponse)
-def get_reviews(id_doctor: int, db: Session = Depends(create_db_connection)):
+def get_reviews(id_doctor: int):
     """Endpoint to fetch all reviews related to a doctor"""
-    reviews = fetch_reviews_by_doctor(id_doctor, db)
+    reviews = fetch_reviews_by_doctor(id_doctor)
     return {"reviews": reviews}
 
 @router.get("/evaluate/patient", response_model=DoctorReviewsResponse)
-def get_reviews(id_patient: int, db: Session = Depends(create_db_connection)):
+def get_reviews(id_patient: int,doctor_id:int):
     """Endpoint to fetch all reviews related to a doctor"""
-    reviews = fetch_reviews_by_patient(id_patient, db)
+    reviews = fetch_reviews_by_patient(id_patient,doctor_id)
     return {"reviews": reviews}
 
 @router.post("/evaluate/create")
 def post_review(
     request: CreateReviewRequest,
-    db: Session = Depends(create_db_connection),
     current_user: UserResponse = Depends(get_current_user)  # Ensure user is authenticated
 ):
     """Endpoint to create a new review"""
     try:
-        create_review(request, db)
+        create_review(request)
         return {"message": "Review created successfully"}
     except HTTPException as e:
         raise e
@@ -39,10 +38,10 @@ def post_review(
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.put("/evaluate/calculate_rating")
-def calculate_rating(id_doctor: int, db: Session = Depends(create_db_connection)):
+def calculate_rating(id_doctor: int):
     """Endpoint to calculate and update the average rating for a doctor"""
     try:
-        calculate_avg_rating(id_doctor, db)
+        calculate_avg_rating(id_doctor)
         return {"message": "Rating updated successfully"}
     except HTTPException as e:
         raise e
