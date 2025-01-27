@@ -21,6 +21,15 @@ def fetch_reviews_by_doctor(id_doctor: int) -> List[ReviewResponse]:
     reviews=execute_query(query, (id_doctor,), fetch_all=True)
     return [ReviewResponse(**review) for review in reviews]
 
+def fetch_doctor_rating(id_doctor: int):
+    query = """
+        SELECT rating
+        FROM doctors
+        WHERE id = %s
+    """
+    rating=execute_query(query, (id_doctor,), fetch_one=True)
+    return rating
+
 
 
 def fetch_reviews_by_patient(id_pat: int,doctor_id : int) -> List[ReviewResponse]:
