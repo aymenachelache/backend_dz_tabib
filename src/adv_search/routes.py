@@ -9,10 +9,10 @@ from src.adv_search.services import fetch_specialities, fetch_assurances, fetch_
 router = APIRouter()
 
 @router.get("/adv_search", response_model=AdvancedSearchResponse)
-def get_adv_search_data(db: Session = Depends(create_db_connection)):
+def get_adv_search_data():
     """Endpoint to fetch all specialities, assurances, and days of the week"""
-    specialities = fetch_specialities(db)
-    assurances = fetch_assurances(db)
+    specialities = fetch_specialities()
+    assurances = fetch_assurances()
     days_of_week = fetch_days_of_week()
     doctors = []  # Initially no doctors
     return {"specialities": specialities, "assurances": assurances, "days_of_week": days_of_week, "doctors": doctors}
@@ -23,8 +23,7 @@ def advanced_search(
     localization: str = Query(None),
     assurance: str = Query(None),
     disponibilite: str = Query(None),
-    page: int = Query(1),
-    db: Session = Depends(create_db_connection)
+    page: int = Query(1)
 ):
     """Endpoint to perform advanced search for doctors"""
     criteria = {
@@ -33,6 +32,6 @@ def advanced_search(
         "assurance": assurance,
         "disponibilite": disponibilite
     }
-    doctors = search_doctors(criteria, page, db)
+    doctors = search_doctors(criteria, page)
     return {"doctors": doctors}
 

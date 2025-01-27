@@ -7,12 +7,12 @@ from src.adv_search.schemas import DoctorHomepage
 from src.database.query_helper import execute_query
 
 
-def fetch_specialities(db: Session) -> Dict[int, str]:
+def fetch_specialities() -> Dict[int, str]:
     query = "SELECT id, name FROM specializations"
     rows= execute_query(query,fetch_all=True)
     return {row["id"]: row["name"] for row in rows}
 
-def fetch_assurances(db: Session) -> Dict[int, str]:
+def fetch_assurances() -> Dict[int, str]:
     query = "SELECT id, name FROM assurance"
     rows= execute_query(query,fetch_all=True)
     return {row["id"]: row["name"] for row in rows}
@@ -32,7 +32,7 @@ def fetch_days_of_week() -> List[str]:
 
 
 def search_doctors(
-    criteria: Dict[str, str], page: int, db: Session
+    criteria: Dict[str, str], page: int
 ) -> List[DoctorHomepage]:
     base_query = """
         SELECT DISTINCT
