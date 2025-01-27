@@ -10,14 +10,12 @@ from src.database.query_helper import execute_query
 def fetch_specialities(db: Session) -> Dict[int, str]:
     query = "SELECT id, name FROM specializations"
     rows= execute_query(query,fetch_all=True)
-    return rows
-
+    return {row["id"]: row["name"] for row in rows}
 
 def fetch_assurances(db: Session) -> Dict[int, str]:
     query = "SELECT id, name FROM assurance"
     rows= execute_query(query,fetch_all=True)
-    print(rows)
-    return rows
+    return {row["id"]: row["name"] for row in rows}
 
 
 def fetch_days_of_week() -> List[str]:
