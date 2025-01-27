@@ -109,5 +109,5 @@ def get_specializations_from_db():
     query = "SELECT * FROM specializations"
     return execute_query(query, fetch_all=True)
 def fetch_assurances():
-    query = "SELECT id, name FROM Assurance"
+    query = "SELECT id, name FROM assurance"
     return execute_query(query, fetch_all=True)

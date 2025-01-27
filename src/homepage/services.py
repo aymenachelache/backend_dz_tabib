@@ -1,8 +1,10 @@
 # src/homepage/services.py
 
 from typing import List, Dict
+import pymysql
 from sqlalchemy.orm import Session
 from src.database.connection import create_db_connection
+from src.database.query_helper import execute_query
 from src.homepage.schemas import DoctorHomepage, SpecialiteResponse
 
 def fetch_specialities(db) -> Dict[int, str]:
@@ -33,11 +35,9 @@ def fetch_doctors(page: int, db) -> List[DoctorHomepage]:
         ORDER BY d.first_name, d.last_name
         LIMIT %s OFFSET %s
     """
-    with db.cursor(dictionary=True) as cursor:
-        cursor.execute(query, (page_size, offset))
-        rows = cursor.fetchall()
-        print(rows)
-        return [DoctorHomepage(**row) for row in rows]
+
+    rows = execute_query(query, (page_size, offset), fetch_all=True)
+    return rows
 
 def fetch_doctors_by_specialty(category: str, page: int, db) -> List[DoctorHomepage]:
     """Fetch doctors filtered by category (specialty) with pagination, including specific attributes."""
@@ -45,6 +45,7 @@ def fetch_doctors_by_specialty(category: str, page: int, db) -> List[DoctorHomep
     offset = (page - 1) * page_size
     query = """
         SELECT 
+            d.id,
             d.first_name AS firstname, 
             d.last_name AS familyname, 
             s.name AS specialite, 
@@ -59,10 +60,8 @@ def fetch_doctors_by_specialty(category: str, page: int, db) -> List[DoctorHomep
         ORDER BY d.first_name, d.last_name
         LIMIT %s OFFSET %s
     """
-    with db.cursor(dictionary=True) as cursor:
-        cursor.execute(query, (category, page_size, offset))
-        rows = cursor.fetchall()
-        return [DoctorHomepage(**row) for row in rows]
+    rows = execute_query(query, (category,page_size, offset), fetch_all=True)
+    return rows
 
 
 

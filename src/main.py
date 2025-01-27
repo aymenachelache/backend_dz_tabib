@@ -13,6 +13,7 @@ from src.auth.backgroundTasks import delete_expired_tokens
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from src.evaluate.routes import router as evaluate_router
 
 # Additional routers can be included here if you have other modules
 
@@ -34,8 +35,8 @@ app.add_middleware(
 # Include the authentication router
 # src/main.py
 
-from fastapi import FastAPI
-from src.evaluate.routes import router as evaluate_router
+
+
 
 
 app.include_router(auth_router)

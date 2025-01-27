@@ -1,6 +1,7 @@
 # src/adv_search/services.py
 
 from typing import List, Dict
+import pymysql
 from sqlalchemy.orm import Session
 from src.adv_search.schemas import DoctorHomepage
 from src.database.query_helper import execute_query
@@ -8,15 +9,15 @@ from src.database.query_helper import execute_query
 
 def fetch_specialities(db: Session) -> Dict[int, str]:
     query = "SELECT id, name FROM specializations"
-    with db.cursor(dictionary=True) as cursor:
+    with db.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute(query)
         rows = cursor.fetchall()
         return {row["id"]: row["name"] for row in rows}
 
 
 def fetch_assurances(db: Session) -> Dict[int, str]:
-    query = "SELECT id , name FROM assurance"
-    with db.cursor(dictionary=True) as cursor:
+    query = "SELECT id, name FROM assurance"
+    with db.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute(query)
         rows = cursor.fetchall()
         return {row["id"]: row["name"] for row in rows}
