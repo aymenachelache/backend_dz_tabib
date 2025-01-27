@@ -23,6 +23,7 @@ def advanced_search(
     localization: str = Query(None),
     assurance: str = Query(None),
     disponibilite: str = Query(None),
+    name: str = Query(None),
     page: int = Query(1)
 ):
     """Endpoint to perform advanced search for doctors"""
@@ -30,7 +31,8 @@ def advanced_search(
         "specialite": specialite,
         "localization": localization,
         "assurance": assurance,
-        "disponibilite": disponibilite
+        "disponibilite": disponibilite,
+        "name": name,
     }
     doctors = search_doctors(criteria, page)
     return {"doctors": doctors}

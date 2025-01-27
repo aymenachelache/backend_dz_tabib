@@ -73,6 +73,12 @@ def search_doctors(
     if criteria.get("disponibilite"):
         conditions.append("days.day_of_week = %s")
         params.append(criteria["disponibilite"])
+    
+    if criteria.get("name"):
+        name = criteria["name"]
+        search_pattern = f"%{name}%"
+        conditions.append("d.first_name LIKE %s OR d.last_name LIKE %s")
+        params.extend([search_pattern, search_pattern])
 
     if conditions:
         base_query += " AND " + " AND ".join(conditions)
