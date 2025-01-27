@@ -14,9 +14,10 @@ connection_pool = PooledDB(
     password=os.getenv("DB_PASSWORD"),
     mincached=2,  # Minimum number of idle connections in the pool
     maxcached=5,  # Maximum number of idle connections in the pool
-    maxconnections=10,  # Maximum number of connections in the pool
+    maxconnections=5,  # Maximum number of connections in the pool
     blocking=True,  # Block and wait if no connections are available
 )
+
 
 def get_connection():
     """Get a connection from the pool."""
@@ -25,10 +26,20 @@ def get_connection():
     except Exception as e:
         raise Exception(f"Failed to get a connection: {e}")
 
-def execute_query(query: str, params: tuple = (), fetch_one=False, fetch_all=False, return_last_id=False, check_rows_affected=False):
+
+def execute_query(
+    query: str,
+    params: tuple = (),
+    fetch_one=False,
+    fetch_all=False,
+    return_last_id=False,
+    check_rows_affected=False,
+):
     """Execute a database query with provided parameters."""
     connection = get_connection()
-    cursor = connection.cursor(pymysql.cursors.DictCursor)  # Return results as dictionaries
+    cursor = connection.cursor(
+        pymysql.cursors.DictCursor
+    )  # Return results as dictionaries
     try:
         cursor.execute(query, params)
 
@@ -56,6 +67,3 @@ def execute_query(query: str, params: tuple = (), fetch_one=False, fetch_all=Fal
     finally:
         cursor.close()
         connection.close()  # Return the connection to the pool
-
-
-
