@@ -46,7 +46,7 @@ def get_day_appointments_number(doctor_id, day_id,date):
     return execute_query(query, params, fetch_one=True)
 
 def user_appoi_number_in_the_day(user_id, day_id,date,doctor_id):
-    query = "SELECT COUNT(*) as user_appointment_number FROM appointments WHERE patient_id = %s AND working_day_id = %s AND appointment_date = %s, doctor_id = %s"
+    query = "SELECT COUNT(*) as user_appointment_number FROM appointments WHERE patient_id = %s AND working_day_id = %s AND appointment_date = %s and doctor_id = %s"
     params = (user_id, day_id,date,doctor_id)
     return execute_query(query, params, fetch_one=True)
 
