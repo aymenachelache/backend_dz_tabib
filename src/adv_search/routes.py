@@ -8,7 +8,7 @@ from src.adv_search.services import fetch_specialities, fetch_assurances, fetch_
 
 router = APIRouter()
 
-@router.get("/adv_search", response_model=AdvancedSearchResponse)
+@router.get("/adv_search")
 def get_adv_search_data(db: Session = Depends(create_db_connection)):
     """Endpoint to fetch all specialities, assurances, and days of the week"""
     specialities = fetch_specialities(db)

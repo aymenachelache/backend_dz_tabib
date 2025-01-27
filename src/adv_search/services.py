@@ -16,6 +16,7 @@ def fetch_specialities(db: Session) -> Dict[int, str]:
 def fetch_assurances(db: Session) -> Dict[int, str]:
     query = "SELECT id, name FROM assurance"
     rows= execute_query(query,fetch_all=True)
+    print(rows)
     return rows
 
 
