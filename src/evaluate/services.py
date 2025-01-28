@@ -16,7 +16,7 @@ def fetch_reviews_by_doctor(id_doctor: int) -> List[ReviewResponse]:
         FROM review r
         JOIN evaluate e ON r.ID_review = e.review_id
         JOIN users u ON e.patient_id = u.id
-        WHERE e.doctor_id = %s AND u.is_doctor = 0
+        WHERE e.doctor_id = %s
     """
     reviews=execute_query(query, (id_doctor,), fetch_all=True)
     return [ReviewResponse(**review) for review in reviews]
@@ -34,12 +34,15 @@ def fetch_doctor_rating(id_doctor: int):
 
 def fetch_reviews_by_patient(id_pat: int,doctor_id : int) -> List[ReviewResponse]:
     query = """
-        SELECT r.note, r.comment
+        SELECT r.note, r.comment,
+        u.id as patient_id,
+        u.first_name as patient_first_name,
+        u.last_name as patient_last_name
         FROM review r
         JOIN evaluate e ON r.ID_review = e.review_id
         JOIN users u ON e.patient_id = u.id
         JOIN doctors d ON e.doctor_id = d.id
-        WHERE e.patient_id = %s AND u.is_doctor = 0 and e.doctor_id = %s
+        WHERE e.patient_id = %s AND e.doctor_id = %s
     """
     reviews=execute_query(query, (id_pat,doctor_id), fetch_all=True)
     return [ReviewResponse(**review) for review in reviews]
@@ -63,10 +66,8 @@ def create_review(request: CreateReviewRequest):
     doctor =execute_query("SELECT COUNT(*) FROM doctors WHERE id = %s", (request.id_doctor,), fetch_one=True)
     if not doctor:
         raise HTTPException(status_code=404, detail="Doctor not found")
-
-
-    # Check if id_patient (now user_id) exists
-    patient=execute_query("SELECT COUNT(*) FROM users WHERE id = %s AND is_doctor = 0", (request.id_patient,), fetch_one=True)
+    
+    patient=execute_query("SELECT COUNT(*) FROM users WHERE id = %s", (request.id_patient,), fetch_one=True)
     if not patient:
         raise HTTPException(status_code=404, detail="Patient (user) not found")
 
