@@ -3,7 +3,7 @@ import pymysql
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv(override=True)
 
 # Create a connection pool
 connection_pool = PooledDB(
