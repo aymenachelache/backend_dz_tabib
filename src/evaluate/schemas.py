@@ -6,6 +6,9 @@ from typing import List,Dict
 from pydantic import BaseModel
 
 class ReviewResponse(BaseModel):
+    patient_id: int
+    patient_first_name: str
+    patient_last_name: str
     note: int
     comment: str
 
