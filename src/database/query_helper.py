@@ -13,8 +13,8 @@ connection_pool = PooledDB(
     user=os.getenv("DB_USER"),
     password=os.getenv("DB_PASSWORD"),
     mincached=2,  # Minimum number of idle connections in the pool
-    maxcached=5,  # Maximum number of idle connections in the pool
-    maxconnections=5,  # Maximum number of connections in the pool
+    maxcached=4,  # Maximum number of idle connections in the pool
+    maxconnections=4,  # Maximum number of connections in the pool
     blocking=True,  # Block and wait if no connections are available
 )
 
